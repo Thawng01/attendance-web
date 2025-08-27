@@ -295,8 +295,8 @@ const HomePage = () => {
 
                             const activePercent =
                                 (activeUsers / (totalUsers || 1)) * 100;
-                            const inactivePercent =
-                                (inactiveUsers / (totalUsers || 1)) * 100;
+                            // const inactivePercent =
+                            //     (inactiveUsers / (totalUsers || 1)) * 100;
 
                             // Get recent active users (last 5)
                             const recentActiveUsers = branch.User.filter(

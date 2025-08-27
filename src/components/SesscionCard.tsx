@@ -1,4 +1,4 @@
-import type { Session, User } from "@/pages/BranchUser";
+import type { Session } from "@/pages/BranchUser";
 import { formatDateTime, formatDuration } from "@/utils";
 
 // Session Card Component

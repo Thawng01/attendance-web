@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import GradientButton from "./GradientButton";
 import usePost from "@/hooks/usePost";
 import { useQueryClient } from "@tanstack/react-query";

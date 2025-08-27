@@ -1,5 +1,3 @@
-import React from "react";
-
 const Header = () => {
     return (
         <header className="w-full bg-white/70 backdrop-blur-md shadow-md fixed top-0 left-0">

@@ -1,4 +1,4 @@
-import type { History, Session, User } from "@/pages/BranchUser";
+import type { History } from "@/pages/BranchUser";
 import { formatDate, formatDateTime, formatDuration } from "@/utils";
 
 // History Card Component

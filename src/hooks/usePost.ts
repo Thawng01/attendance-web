@@ -14,7 +14,7 @@ const usePost = (url: string, callback?: (value: any) => void) => {
             callback && callback(data);
         },
 
-        onError: (error) => {
+        onError: () => {
             // console.log("error : ", error)
             // Toast.show({
             //     type: 'error',

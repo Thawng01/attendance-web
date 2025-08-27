@@ -248,7 +248,7 @@ const UserManagementDashboard: React.FC = () => {
         (historiesLoading && activeTab === "history");
 
     // Determine if we have an error
-    const hasError = usersError || sessionsError || historiesError;
+    // const hasError = usersError || sessionsError || historiesError;
 
     return (
         <div className="min-h-screen p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
