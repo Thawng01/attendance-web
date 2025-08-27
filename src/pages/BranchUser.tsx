@@ -225,8 +225,8 @@ const UserManagementDashboard: React.FC = () => {
     // Calculate stats
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;
-    const activeSessionsCount =
-        sessions?.filter((s: Session) => s.active).length || 0;
+    // const activeSessionsCount =
+    // sessions?.filter((s: Session) => s.active).length || 0;
 
     // Apply search filter
     const filteredUsers = users?.filter((user: User) =>
@@ -331,7 +331,7 @@ const UserManagementDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
+                        {/* <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
                             <div className="flex items-center">
                                 <div className="p-3 rounded-lg bg-purple-100">
                                     <svg
@@ -358,7 +358,7 @@ const UserManagementDashboard: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
                             <div className="flex items-center">
