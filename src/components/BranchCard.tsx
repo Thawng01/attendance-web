@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import GradientButton from "./GradientButton";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import BranchCardAction from "./BranchCardAction";
 
 type User = {
     id: string;
@@ -48,9 +49,12 @@ const BranchCard = ({
                         {format(new Date(branch.createdAt), "MMM d, yyyy")}
                     </p>
                 </div>
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-[#189af0]">
-                    {totalUsers} users
-                </span>
+                <div className="flex flex-row items-center">
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-[#189af0]">
+                        {totalUsers} users
+                    </span>
+                    <BranchCardAction branchId={branch.id} />
+                </div>
             </div>
 
             {/* Progress Bars */}

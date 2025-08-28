@@ -5,19 +5,13 @@ import useDelete from "@/hooks/useDelete";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const CardAction = ({
-    userId,
-    branchId,
-}: {
-    userId: string;
-    branchId: string;
-}) => {
+const BranchCardAction = ({ branchId }: { branchId: string }) => {
     const queryClient = useQueryClient();
-    const { mutate: deleteUser } = useDelete("/users", () => {
+    const { mutate: deleteBranch } = useDelete("/branches", () => {
         queryClient.invalidateQueries({
-            queryKey: [`/users/branch/${branchId}`],
+            queryKey: [`/branches`],
         });
-        toast("The user successfully deleted.", {
+        toast("The branch successfully deleted.", {
             style: {
                 color: "green",
             },
@@ -25,7 +19,7 @@ const CardAction = ({
     });
 
     const handleDelete = () => {
-        deleteUser({ id: userId });
+        deleteBranch({ id: branchId });
     };
     return (
         <div>
@@ -48,4 +42,4 @@ const CardAction = ({
     );
 };
 
-export default CardAction;
+export default BranchCardAction;

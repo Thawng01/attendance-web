@@ -254,9 +254,11 @@ const HomePage = () => {
                                 ? "Try adjusting your search query"
                                 : "Get started by adding your first branch"}
                         </p>
-                        <GradientButton onClick={() => setIsOpen(true)}>
-                            + Add Your First Branch
-                        </GradientButton>
+                        <div className="flex justify-center">
+                            <GradientButton onClick={() => setIsOpen(true)}>
+                                + Add Your First Branch
+                            </GradientButton>
+                        </div>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
