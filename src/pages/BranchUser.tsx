@@ -8,11 +8,13 @@ import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
 import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
 import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
 import { Sorting } from "@/components/Sorting";
+import StatCard from "@/components/StatCard";
 import UserCard from "@/components/UserCard";
 import useFetch from "@/hooks/useFetch";
 import { useSortedHistory } from "@/hooks/useSort";
+import { ChevronLeft } from "lucide-react";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Define TypeScript interfaces based on your Prisma models
 export interface User {
@@ -75,12 +77,11 @@ const UserManagementDashboard: React.FC = () => {
     const [sortBy, setSortBy] = useState<"date" | "startTime" | "endTime">(
         "date"
     );
-    // const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
     const [searchTerm, setSearchTerm] = useState("");
     const [date, setDate] = React.useState<Date>(new Date());
     const param = useParams();
-
-    // Fetch data with error handling
+    const navigate = useNavigate();
     const {
         data: users,
         isLoading: usersLoading,
@@ -102,11 +103,8 @@ const UserManagementDashboard: React.FC = () => {
         refetch: refetchHistories,
     } = useFetch(`/histories/branch/${param.id}?date=${date}`);
 
-    // Calculate stats
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;
-    // const activeSessionsCount =
-    // sessions?.filter((s: Session) => s.active).length || 0;
 
     // Apply search filter
     const filteredUsers = users?.filter((user: User) =>
@@ -128,14 +126,17 @@ const UserManagementDashboard: React.FC = () => {
         (sessionsLoading && activeTab === "sessions") ||
         (historiesLoading && activeTab === "history");
 
-    // Determine if we have an error
-    // const hasError = usersError || sessionsError || historiesError;
-
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen px-6 pt-3 pb-6">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center">
                     <div>
+                        <div
+                            onClick={() => navigate("/")}
+                            className="bg-blue-100 cursor-pointer h-10 w-10 flex justify-center items-center  rounded-full"
+                        >
+                            <ChevronLeft color="gray" />
+                        </div>
                         <h1 className="text-3xl font-bold text-gray-900">
                             User Management Dashboard
                         </h1>
@@ -145,7 +146,6 @@ const UserManagementDashboard: React.FC = () => {
                         </p>
                     </div>
                     <div className="mt-3 md:mt-0">
-                        {/* <GradientButton>Add New User</GradientButton> */}
                         <InputDialog branchId={param.id!} />
                     </div>
                 </div>
@@ -159,121 +159,11 @@ const UserManagementDashboard: React.FC = () => {
                         onRetry={refetchUsers}
                     />
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex items-center">
-                                <div className="p-3 rounded-lg bg-blue-100">
-                                    <svg
-                                        className="w-6 h-6 text-blue-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                                        />
-                                    </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h2 className="text-2xl font-bold text-gray-800">
-                                        {totalUsers}
-                                    </h2>
-                                    <p className="text-gray-600">Total Users</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex items-center">
-                                <div className="p-3 rounded-lg bg-green-100">
-                                    <svg
-                                        className="w-6 h-6 text-green-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                                        />
-                                    </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h2 className="text-2xl font-bold text-gray-800">
-                                        {activeUsers}
-                                    </h2>
-                                    <p className="text-gray-600">
-                                        Active Users
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex items-center">
-                                <div className="p-3 rounded-lg bg-purple-100">
-                                    <svg
-                                        className="w-6 h-6 text-purple-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                                        />
-                                    </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h2 className="text-2xl font-bold text-gray-800">
-                                        {activeSessionsCount}
-                                    </h2>
-                                    <p className="text-gray-600">
-                                        Active Sessions
-                                    </p>
-                                </div>
-                            </div>
-                        </div> */}
-
-                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
-                            <div className="flex items-center">
-                                <div className="p-3 rounded-lg bg-amber-100">
-                                    <svg
-                                        className="w-6 h-6 text-amber-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                </div>
-                                <div className="ml-4">
-                                    <h2 className="text-2xl font-bold text-gray-800">
-                                        {histories?.length || 0}
-                                    </h2>
-                                    <p className="text-gray-600">
-                                        History Events
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <StatCard
+                        totalUsers={totalUsers}
+                        totalActiveUsers={activeUsers}
+                        numberOfHistory={histories?.length || 0}
+                    />
                 )}
 
                 {/* Tab Navigation */}

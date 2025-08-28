@@ -1,5 +1,6 @@
 import type { Session, User } from "@/pages/BranchUser";
 import { formatDate, formatDuration } from "@/utils";
+import CardAction from "./CardAction";
 
 // User Card Component
 const UserCard: React.FC<{ user: User; sessions: Session[] }> = ({
@@ -30,9 +31,13 @@ const UserCard: React.FC<{ user: User; sessions: Session[] }> = ({
                             </p>
                         </div>
                     </div>
-                    <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-[#189af0]">
-                        {user.branch.name}
-                    </span>
+                    <div className="flex flex-row items-center">
+                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-[#189af0]">
+                            {user.branch.name}
+                        </span>
+
+                        <CardAction userId={user.id} branchId={user.branchId} />
+                    </div>
                 </div>
 
                 <div className="mt-4 flex justify-between items-center">

@@ -1,6 +1,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { clientApi } from "../api/clientApi";
+import { toast } from "sonner";
 
 const useDelete = (url: string, callback?: (value: any) => void) => {
     const createItem = async (data: any) => {
@@ -17,18 +18,11 @@ const useDelete = (url: string, callback?: (value: any) => void) => {
         },
 
         onError: () => {
-            // console.log("error : ", error)
-            // Toast.show({
-            //     type: 'error',
-            //     text1: "Sorry!",
-            //     text2: "Something went wrong while processing...",
-            //     text1Style: {
-            //         fontSize: 16,
-            //     },
-            //     text2Style: {
-            //         fontSize: 14,
-            //     },
-            // })
+            toast("Someting went wrong while deleting the item.", {
+                style: {
+                    color: 'red'
+                }
+            })
         }
     });
 };
