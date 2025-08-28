@@ -1,3 +1,4 @@
+import type { History } from "@/pages/BranchUser";
 
 // Utility function to format date
 export const formatDate = (dateString: string) => {
@@ -36,3 +37,18 @@ export const formatDuration = (ms: number) => {
         return `${seconds}s`;
     }
 };
+
+
+export function sortHistory(data: History[], sortBy: 'duration' | 'date', order: 'asc' | 'desc' = 'asc'): History[] {
+    return [...data].sort((a, b) => {
+        let comparison = 0;
+
+        if (sortBy === 'duration') {
+            comparison = a.session.duration - b.session.duration;
+        } else if (sortBy === 'date') {
+            comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+
+        return order === 'desc' ? -comparison : comparison;
+    });
+}

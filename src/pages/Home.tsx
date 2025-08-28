@@ -5,6 +5,7 @@ import useFetch from "@/hooks/useFetch";
 import CreateBranch from "@/components/CreateBranch";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
+import { Sorting } from "@/components/Sorting";
 
 type User = {
     id: string;
@@ -177,11 +178,11 @@ const HomePage = () => {
 
                 {/* Controls Section */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
-                    <div className="relative w-full md:w-64">
+                    <div className="relative bg-white border-0 shadow-sm w-full md:w-64 rounded-md">
                         <input
                             type="text"
                             placeholder="Search branches..."
-                            className="w-full pl-10 text-gray-600 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                            className="w-full pl-10 text-gray-600 pr-4 py-2.5 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -202,7 +203,7 @@ const HomePage = () => {
                     </div>
 
                     <div className="flex items-center space-x-4 w-full md:w-auto">
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                             <span className="text-gray-600 mr-2">Sort by:</span>
                             <select
                                 className="border text-gray-700 border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -220,7 +221,17 @@ const HomePage = () => {
                                 <option value="users">Users</option>
                                 <option value="date">Date</option>
                             </select>
-                        </div>
+                        </div> */}
+
+                        <Sorting
+                            data={[
+                                { value: "name", label: "Name" },
+                                { value: "users", label: "Users" },
+                                { value: "date", label: "Date" },
+                            ]}
+                            defaultValue={sortBy}
+                            setSortBy={setSortBy}
+                        />
 
                         <GradientButton onClick={() => setIsOpen(true)}>
                             + Add Branch
@@ -327,7 +338,7 @@ const HomePage = () => {
                                                 )}
                                             </p>
                                         </div>
-                                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-[#189af0]">
                                             {totalUsers} users
                                         </span>
                                     </div>
@@ -398,34 +409,6 @@ const HomePage = () => {
                                             View Details
                                             <ChevronRight />
                                         </GradientButton>
-                                        {/* <button
-                                            onClick={() =>
-                                                navigate(
-                                                    `/branches/${branch.id}`
-                                                )
-                                            }
-                                            className="w-full px-5 py-2.5 text-sm font-medium text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center group"
-                                            style={{
-                                                background:
-                                                    "linear-gradient(to right, #56c1f7, #2192ef, #189af0)",
-                                            }}
-                                        >
-                                            View Details
-                                            <svg
-                                                className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M9 5l7 7-7 7"
-                                                />
-                                            </svg>
-                                        </button> */}
                                     </div>
                                 </div>
                             );

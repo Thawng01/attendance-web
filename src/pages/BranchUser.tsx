@@ -1,7 +1,10 @@
+import { DatePicker } from "@/components/DatePicker";
 import HistoryCard from "@/components/HistoryCard";
 import SessionCard from "@/components/SesscionCard";
+import { Sorting } from "@/components/Sorting";
 import UserCard from "@/components/UserCard";
 import useFetch from "@/hooks/useFetch";
+import { useSortedHistory } from "@/hooks/useSort";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -197,7 +200,12 @@ const UserManagementDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<
         "users" | "sessions" | "history"
     >("users");
+    const [sortBy, setSortBy] = useState<"date" | "startTime" | "endTime">(
+        "date"
+    );
+    // const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
     const [searchTerm, setSearchTerm] = useState("");
+    const [date, setDate] = React.useState<Date>(new Date());
     const param = useParams();
 
     // Fetch data with error handling
@@ -220,7 +228,7 @@ const UserManagementDashboard: React.FC = () => {
         isLoading: historiesLoading,
         error: historiesError,
         refetch: refetchHistories,
-    } = useFetch(`/histories/branch/${param.id}`);
+    } = useFetch(`/histories/branch/${param.id}?date=${date}`);
 
     // Calculate stats
     const totalUsers = users?.length || 0;
@@ -240,6 +248,7 @@ const UserManagementDashboard: React.FC = () => {
     const filteredHistory = histories?.filter((historyItem: History) =>
         historyItem.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    const sortedHistory = useSortedHistory(filteredHistory, sortBy, "asc");
 
     // Determine if we're in a loading state
     const isLoading =
@@ -251,7 +260,7 @@ const UserManagementDashboard: React.FC = () => {
     // const hasError = usersError || sessionsError || historiesError;
 
     return (
-        <div className="min-h-screen p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8 flex justify-between items-center">
                     <div>
@@ -427,7 +436,7 @@ const UserManagementDashboard: React.FC = () => {
                     </div>
 
                     <div className="p-6">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div className="flex flex-col md:flex-row justify-between items-start lg:items-center mb-6 gap-4">
                             <h2 className="text-xl font-semibold text-gray-800">
                                 {activeTab === "users"
                                     ? "All Users"
@@ -435,32 +444,61 @@ const UserManagementDashboard: React.FC = () => {
                                     ? "Active Sessions"
                                     : "History Log"}
                             </h2>
-
-                            <div className="relative w-full md:w-64">
-                                <input
-                                    type="text"
-                                    placeholder={`Search ${activeTab}...`}
-                                    className="w-full pl-10 text-gray-700 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                    value={searchTerm}
-                                    onChange={(e) =>
-                                        setSearchTerm(e.target.value)
-                                    }
-                                    disabled={isLoading}
-                                />
-                                <svg
-                                    className="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            <div className="flex flex-col lg:flex-row md:items-center gap-4">
+                                <div className="relative w-full lg:w-64">
+                                    <input
+                                        type="text"
+                                        placeholder={`Search ${activeTab}...`}
+                                        className="w-full pl-10 text-gray-700 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
+                                        disabled={isLoading}
                                     />
-                                </svg>
+                                    <svg
+                                        className="w-5 h-5 text-gray-400 absolute left-3 top-2.5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                        />
+                                    </svg>
+                                </div>
+
+                                {activeTab === "history" && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                        <DatePicker
+                                            date={date}
+                                            setDate={setDate}
+                                        />
+
+                                        <Sorting
+                                            data={[
+                                                {
+                                                    value: "date",
+                                                    label: "Date",
+                                                },
+                                                {
+                                                    value: "startTime",
+                                                    label: "Start Time",
+                                                },
+                                                {
+                                                    value: "endTime",
+                                                    label: "End Time",
+                                                },
+                                            ]}
+                                            defaultValue={sortBy}
+                                            setSortBy={setSortBy}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -581,8 +619,8 @@ const UserManagementDashboard: React.FC = () => {
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {filteredHistory?.length > 0 ? (
-                                            filteredHistory?.map(
+                                        {sortedHistory?.length > 0 ? (
+                                            sortedHistory?.map(
                                                 (historyItem: History) => (
                                                     <HistoryCard
                                                         key={historyItem.id}

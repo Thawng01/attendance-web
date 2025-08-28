@@ -42,7 +42,7 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
                     </div>
                     <div>
                         <p className="text-xs text-gray-500">Duration</p>
-                        <p className="text-sm font-medium text-gray-500">
+                        <p className="text-sm font-medium text-green-600">
                             {session.duration
                                 ? formatDuration(session.duration)
                                 : formatDuration(diff)}

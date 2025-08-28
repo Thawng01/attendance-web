@@ -22,7 +22,7 @@ const HistoryCard: React.FC<{
                         </p>
                     </div>
                     <div
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${"bg-gray-100 text-gray-800"}`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${"bg-blue-50 text-[#189af0]"}`}
                     >
                         {history.Branch.name}
                     </div>
@@ -37,7 +37,7 @@ const HistoryCard: React.FC<{
                     </div>
                     <div>
                         <p className="text-xs text-gray-500">Duration</p>
-                        <p className="text-sm font-medium text-gray-500">
+                        <p className="text-sm font-medium text-[#189af0]">
                             {formatDuration(history.session.duration)}
                         </p>
                     </div>

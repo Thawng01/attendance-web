@@ -28,7 +28,7 @@ const UserCard: React.FC<{ user: User; sessions: Session[] }> = ({
                             <p className="text-gray-500">{user.email}</p>
                         </div>
                     </div>
-                    <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                    <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-[#189af0]">
                         {user.branch.name}
                     </span>
                 </div>
