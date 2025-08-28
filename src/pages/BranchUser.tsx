@@ -1,6 +1,12 @@
 import { DatePicker } from "@/components/DatePicker";
+import { InputDialog } from "@/components/Dialog";
+import { ErrorDisplay } from "@/components/ErrorDisplay";
 import HistoryCard from "@/components/HistoryCard";
 import SessionCard from "@/components/SesscionCard";
+import { HistoryCardSkeleton } from "@/components/skeleton/HistoryCardSkeleton";
+import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
+import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
+import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
 import { Sorting } from "@/components/Sorting";
 import UserCard from "@/components/UserCard";
 import useFetch from "@/hooks/useFetch";
@@ -32,6 +38,7 @@ export interface Session {
     user?: {
         id: string;
         name: string;
+        email: string;
     };
 }
 
@@ -42,6 +49,7 @@ export interface History {
     user: {
         active: boolean;
         name: string;
+        email: string;
     };
     sessionId?: string;
     session: {
@@ -58,142 +66,6 @@ export interface Branch {
     id: string;
     name: string;
 }
-
-// Skeleton Loader Components
-const UserCardSkeleton: React.FC = () => (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 animate-pulse">
-        <div className="p-6">
-            <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                    <div>
-                        <div className="h-5 bg-gray-300 rounded w-32 mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-40"></div>
-                    </div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-            </div>
-            <div className="mt-4 flex justify-between items-center">
-                <div>
-                    <div className="h-3 bg-gray-200 rounded w-20 mb-1"></div>
-                    <div className="h-3 bg-gray-300 rounded w-16"></div>
-                </div>
-                <div className="text-right">
-                    <div className="h-3 bg-gray-200 rounded w-24 mb-1"></div>
-                    <div className="h-3 bg-gray-300 rounded w-8 ml-auto"></div>
-                </div>
-            </div>
-        </div>
-        <div className="bg-gray-50 px-6 py-3 border-t border-gray-100">
-            <div className="h-3 bg-gray-200 rounded w-32 mb-2"></div>
-            <div className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            </div>
-        </div>
-    </div>
-);
-
-const SessionCardSkeleton: React.FC = () => (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 animate-pulse">
-        <div className="p-5">
-            <div className="flex justify-between items-start">
-                <div>
-                    <div className="h-5 bg-gray-300 rounded w-32 mb-1"></div>
-                    <div className="h-4 bg-gray-200 rounded w-40"></div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                    <div className="h-3 bg-gray-200 rounded w-16 mb-1"></div>
-                    <div className="h-4 bg-gray-300 rounded w-24"></div>
-                </div>
-                <div>
-                    <div className="h-3 bg-gray-200 rounded w-16 mb-1"></div>
-                    <div className="h-4 bg-gray-300 rounded w-20"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-const HistoryCardSkeleton: React.FC = () => (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 animate-pulse">
-        <div className="p-5">
-            <div className="flex justify-between items-start">
-                <div>
-                    <div className="h-5 bg-gray-300 rounded w-32 mb-1"></div>
-                    <div className="h-4 bg-gray-200 rounded w-48"></div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded-full w-20"></div>
-            </div>
-            <div className="mt-4 flex justify-between items-center">
-                <div>
-                    <div className="h-3 bg-gray-200 rounded w-16 mb-1"></div>
-                    <div className="h-4 bg-gray-300 rounded w-32"></div>
-                </div>
-                <div className="text-right">
-                    <div className="h-3 bg-gray-200 rounded w-16 mb-1"></div>
-                    <div className="h-4 bg-gray-300 rounded w-12 ml-auto"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-const StatsSkeleton: React.FC = () => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        {[1, 2, 3, 4].map((i) => (
-            <div
-                key={i}
-                className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 animate-pulse"
-            >
-                <div className="flex items-center">
-                    <div className="p-3 rounded-lg bg-gray-200 mr-4">
-                        <div className="w-6 h-6"></div>
-                    </div>
-                    <div>
-                        <div className="h-7 bg-gray-300 rounded w-10 mb-2"></div>
-                        <div className="h-4 bg-gray-200 rounded w-20"></div>
-                    </div>
-                </div>
-            </div>
-        ))}
-    </div>
-);
-
-// Error Display Component
-const ErrorDisplay: React.FC<{ message: string; onRetry?: () => void }> = ({
-    message,
-    onRetry,
-}) => (
-    <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center my-6">
-        <svg
-            className="w-12 h-12 text-red-500 mx-auto mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-        </svg>
-        <p className="text-red-500 text-lg font-medium mb-4">{message}</p>
-        {onRetry && (
-            <button
-                onClick={onRetry}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-            >
-                Try Again
-            </button>
-        )}
-    </div>
-);
 
 // Main Dashboard Component
 const UserManagementDashboard: React.FC = () => {
@@ -262,7 +134,7 @@ const UserManagementDashboard: React.FC = () => {
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto">
-                <div className="mb-8 flex justify-between items-center">
+                <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">
                             User Management Dashboard
@@ -271,6 +143,10 @@ const UserManagementDashboard: React.FC = () => {
                             Manage users, monitor active sessions, and track
                             history
                         </p>
+                    </div>
+                    <div className="mt-3 md:mt-0">
+                        {/* <GradientButton>Add New User</GradientButton> */}
+                        <InputDialog branchId={param.id!} />
                     </div>
                 </div>
 

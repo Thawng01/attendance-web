@@ -18,9 +18,9 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
                         <h3 className="font-medium text-gray-800">
                             {getUserName()}
                         </h3>
-                        {/* <p className="text-sm text-gray-500">
-                            {getUserEmail()}
-                        </p> */}
+                        <p className="text-sm text-gray-500">
+                            {session.user?.email || "No provided"}
+                        </p>
                     </div>
                     <div
                         className={`px-3 py-1 rounded-full text-xs font-medium ${

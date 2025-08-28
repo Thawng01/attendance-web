@@ -25,7 +25,9 @@ const UserCard: React.FC<{ user: User; sessions: Session[] }> = ({
                             <h3 className="text-lg font-semibold text-gray-800">
                                 {user.name}
                             </h3>
-                            <p className="text-gray-500">{user.email}</p>
+                            <p className="text-gray-500 text-sm">
+                                {user.email || "No provided"}
+                            </p>
                         </div>
                     </div>
                     <span className="px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-[#189af0]">
