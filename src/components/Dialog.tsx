@@ -26,6 +26,10 @@ export function InputDialog({ branchId }: { branchId: string }) {
             queryKey: [`/users/branch/${branchId}`],
         });
         setIsOpen(false);
+        setFormData({
+            name: "",
+            email: "",
+        });
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +79,7 @@ export function InputDialog({ branchId }: { branchId: string }) {
                                 id="email"
                                 name="email"
                                 placeholder="Email..."
+                                value={formData.email}
                                 onChange={handleChange}
                             />
                         </div>

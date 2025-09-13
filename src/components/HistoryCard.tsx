@@ -18,7 +18,7 @@ const HistoryCard: React.FC<{
                             {getUserName()}
                         </h3>
                         <p className="text-sm text-gray-500">
-                            {formatDate(history.createdAt)}
+                            {history.user.email || "No provided"}
                         </p>
                     </div>
                     <div

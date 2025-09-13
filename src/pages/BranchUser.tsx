@@ -1,7 +1,9 @@
 import { DatePicker } from "@/components/DatePicker";
 import { InputDialog } from "@/components/Dialog";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
+import GradientButton from "@/components/GradientButton";
 import HistoryCard from "@/components/HistoryCard";
+import { DateFilter, type DateRange } from "@/components/MultiDatePicker";
 import SessionCard from "@/components/SesscionCard";
 import { HistoryCardSkeleton } from "@/components/skeleton/HistoryCardSkeleton";
 import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
@@ -12,6 +14,8 @@ import StatCard from "@/components/StatCard";
 import UserCard from "@/components/UserCard";
 import useFetch from "@/hooks/useFetch";
 import { useSortedHistory } from "@/hooks/useSort";
+import { formatDate } from "@/utils";
+import ExportButton from "@/utils/ExportButton";
 import { ChevronLeft } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -71,15 +75,20 @@ export interface Branch {
 
 // Main Dashboard Component
 const UserManagementDashboard: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<
-        "users" | "sessions" | "history"
-    >("users");
+    const [activeTab, setActiveTab] = useState<"users" | "sessions" | "record">(
+        "users"
+    );
     const [sortBy, setSortBy] = useState<"date" | "startTime" | "endTime">(
         "date"
     );
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [date, setDate] = React.useState<Date>(new Date());
+    const [isSingleDate, setSingleDate] = React.useState<boolean>(true);
+    const [dateRange, setDateRange] = useState<DateRange>({
+        from: new Date(),
+        to: new Date(),
+    });
+
     const param = useParams();
     const navigate = useNavigate();
     const {
@@ -94,14 +103,18 @@ const UserManagementDashboard: React.FC = () => {
         isLoading: sessionsLoading,
         error: sessionsError,
         refetch: refetchSessions,
-    } = useFetch(`/sessions/branch/${param.id}`);
+    } = useFetch(
+        `/sessions/branch/${param.id}?date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
+    );
 
     const {
         data: histories,
         isLoading: historiesLoading,
         error: historiesError,
         refetch: refetchHistories,
-    } = useFetch(`/histories/branch/${param.id}?date=${date}`);
+    } = useFetch(
+        `/histories/branch/${param.id}?date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
+    );
 
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;
@@ -120,11 +133,17 @@ const UserManagementDashboard: React.FC = () => {
     );
     const sortedHistory = useSortedHistory(filteredHistory, sortBy, "asc");
 
+    const handleDateRangeChange = (range: DateRange, filterType: string) => {
+        if (filterType === "custom") {
+            setDateRange({ from: range.from, to: range.to });
+        }
+    };
+
     // Determine if we're in a loading state
     const isLoading =
         (usersLoading && activeTab === "users") ||
         (sessionsLoading && activeTab === "sessions") ||
-        (historiesLoading && activeTab === "history");
+        (historiesLoading && activeTab === "record");
 
     return (
         <div className="min-h-screen px-6 pt-3 pb-6">
@@ -150,7 +169,15 @@ const UserManagementDashboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Stats Overview */}
+                <div className="flex flex-row items-center mb-6">
+                    <DateFilter
+                        onDateRangeChange={handleDateRangeChange}
+                        dateRange={dateRange}
+                        setDateRange={setDateRange}
+                        onSingleDate={setSingleDate}
+                    />
+                </div>
+
                 {usersLoading ? (
                     <StatsSkeleton />
                 ) : usersError ? (
@@ -166,7 +193,6 @@ const UserManagementDashboard: React.FC = () => {
                     />
                 )}
 
-                {/* Tab Navigation */}
                 <div className="bg-white rounded-xl shadow-sm mb-6 border border-gray-100">
                     <div className="flex border-b border-gray-200">
                         <button
@@ -191,13 +217,13 @@ const UserManagementDashboard: React.FC = () => {
                         </button>
                         <button
                             className={`py-4 px-6 font-medium text-sm ${
-                                activeTab === "history"
+                                activeTab === "record"
                                     ? "text-blue-600 border-b-2 border-blue-600"
                                     : "text-gray-500 hover:text-gray-700"
                             }`}
-                            onClick={() => setActiveTab("history")}
+                            onClick={() => setActiveTab("record")}
                         >
-                            History
+                            Records
                         </button>
                     </div>
 
@@ -208,7 +234,7 @@ const UserManagementDashboard: React.FC = () => {
                                     ? "All Users"
                                     : activeTab === "sessions"
                                     ? "Active Sessions"
-                                    : "History Log"}
+                                    : "Record Log"}
                             </h2>
                             <div className="flex flex-col lg:flex-row md:items-center gap-4">
                                 <div className="relative w-full lg:w-64">
@@ -238,12 +264,12 @@ const UserManagementDashboard: React.FC = () => {
                                     </svg>
                                 </div>
 
-                                {activeTab === "history" && (
+                                {activeTab === "record" && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                        <DatePicker
+                                        {/* <DatePicker
                                             date={date}
                                             setDate={setDate}
-                                        />
+                                        /> */}
 
                                         <Sorting
                                             data={[
@@ -263,6 +289,17 @@ const UserManagementDashboard: React.FC = () => {
                                             defaultValue={sortBy}
                                             setSortBy={setSortBy}
                                         />
+                                        <div className="ml-2">
+                                            <ExportButton
+                                                disabled={historiesLoading}
+                                                data={sortedHistory}
+                                                filename={`Attendance Report for ${formatDate(
+                                                    String(dateRange.from)
+                                                )}-${formatDate(
+                                                    String(dateRange.to)
+                                                )}`}
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -271,7 +308,7 @@ const UserManagementDashboard: React.FC = () => {
                         {/* Error Display */}
                         {(usersError && activeTab === "users") ||
                         (sessionsError && activeTab === "sessions") ||
-                        (historiesError && activeTab === "history") ? (
+                        (historiesError && activeTab === "record") ? (
                             <ErrorDisplay
                                 message={`Failed to load ${activeTab}`}
                                 onRetry={
@@ -293,7 +330,7 @@ const UserManagementDashboard: React.FC = () => {
                                     Array.from({ length: 6 }).map((_, i) => (
                                         <SessionCardSkeleton key={i} />
                                     ))}
-                                {activeTab === "history" &&
+                                {activeTab === "record" &&
                                     Array.from({ length: 6 }).map((_, i) => (
                                         <HistoryCardSkeleton key={i} />
                                     ))}
@@ -411,12 +448,12 @@ const UserManagementDashboard: React.FC = () => {
                                                     />
                                                 </svg>
                                                 <h3 className="mt-4 text-lg font-medium text-gray-700">
-                                                    No history found
+                                                    No record found
                                                 </h3>
                                                 <p className="mt-2 text-gray-500">
                                                     {searchTerm
                                                         ? "Try adjusting your search query"
-                                                        : "No history available for this branch"}
+                                                        : "No record available for this branch"}
                                                 </p>
                                             </div>
                                         )}

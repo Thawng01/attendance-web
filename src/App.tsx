@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./layouts/RootLayout";
 import BranchUser from "./pages/BranchUser";
+import WelcomePage from "./pages/Welcome";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 export const routes = createBrowserRouter([
     {
@@ -10,12 +13,29 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />,
+                element: (
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                ),
             },
             {
                 path: "/branches/:id",
-                element: <BranchUser />,
+                element: (
+                    <ProtectedRoute>
+                        <BranchUser />,
+                    </ProtectedRoute>
+                ),
             },
         ],
+    },
+
+    {
+        path: "/welcome",
+        element: (
+            <PublicRoute>
+                <WelcomePage />
+            </PublicRoute>
+        ),
     },
 ]);

@@ -6,6 +6,7 @@ import CreateBranch from "@/components/CreateBranch";
 import { Sorting } from "@/components/Sorting";
 import BranchCard from "@/components/BranchCard";
 import HomeLoading from "@/components/skeleton/HomeLoading";
+import { useAuth } from "@/contexts/AuthContext";
 
 type User = {
     id: string;
@@ -23,10 +24,14 @@ type Branch = {
 };
 
 const HomePage = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<"name" | "users" | "date">("name");
-    const { data: branches, error, isLoading: loading } = useFetch("/branches");
+    const {
+        data: branches,
+        error,
+        isLoading: loading,
+    } = useFetch(`/branches/company/${user?.id}`);
 
     // Filter and sort branches
     const processedBranches = branches
@@ -196,13 +201,7 @@ const HomePage = () => {
                             setSortBy={setSortBy}
                         />
 
-                        <GradientButton onClick={() => setIsOpen(true)}>
-                            + Add Branch
-                        </GradientButton>
-                        <CreateBranch
-                            isOpen={isOpen}
-                            onClose={() => setIsOpen(false)}
-                        />
+                        <CreateBranch />
                     </div>
                 </div>
 
@@ -255,9 +254,7 @@ const HomePage = () => {
                                 : "Get started by adding your first branch"}
                         </p>
                         <div className="flex justify-center">
-                            <GradientButton onClick={() => setIsOpen(true)}>
-                                + Add Your First Branch
-                            </GradientButton>
+                            <CreateBranch />
                         </div>
                     </div>
                 ) : (
@@ -285,6 +282,7 @@ const HomePage = () => {
 
                             return (
                                 <BranchCard
+                                    key={branch.id}
                                     branch={branch}
                                     recentActiveUsers={recentActiveUsers}
                                     activePercent={activePercent}
