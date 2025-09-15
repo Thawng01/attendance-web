@@ -1,26 +1,17 @@
-import { DatePicker } from "@/components/DatePicker";
 import { InputDialog } from "@/components/Dialog";
+import EmployeeTable from "@/components/employee/EmployeeTable";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
-import GradientButton from "@/components/GradientButton";
-import HistoryCard from "@/components/HistoryCard";
-import { DateFilter, type DateRange } from "@/components/MultiDatePicker";
 import SessionCard from "@/components/SesscionCard";
-import { HistoryCardSkeleton } from "@/components/skeleton/HistoryCardSkeleton";
 import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
 import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
 import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
 import { Sorting } from "@/components/Sorting";
 import StatCard from "@/components/StatCard";
-import UserCard from "@/components/UserCard";
 import useFetch from "@/hooks/useFetch";
-import { useSortedHistory } from "@/hooks/useSort";
-import { formatDate } from "@/utils";
-import ExportButton from "@/utils/ExportButton";
-import { ChevronLeft } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
-// Define TypeScript interfaces based on your Prisma models
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+
 export interface User {
     id: string;
     name: string;
@@ -71,6 +62,8 @@ export interface History {
 export interface Branch {
     id: string;
     name: string;
+    companyId: string;
+    User: User[];
 }
 
 // Main Dashboard Component
@@ -83,14 +76,8 @@ const UserManagementDashboard: React.FC = () => {
     );
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [isSingleDate, setSingleDate] = React.useState<boolean>(true);
-    const [dateRange, setDateRange] = useState<DateRange>({
-        from: new Date(),
-        to: new Date(),
-    });
 
     const param = useParams();
-    const navigate = useNavigate();
     const {
         data: users,
         isLoading: usersLoading,
@@ -103,18 +90,7 @@ const UserManagementDashboard: React.FC = () => {
         isLoading: sessionsLoading,
         error: sessionsError,
         refetch: refetchSessions,
-    } = useFetch(
-        `/sessions/branch/${param.id}?date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
-    );
-
-    const {
-        data: histories,
-        isLoading: historiesLoading,
-        error: historiesError,
-        refetch: refetchHistories,
-    } = useFetch(
-        `/histories/branch/${param.id}?date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
-    );
+    } = useFetch(`/sessions/branch/${param.id}`);
 
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;
@@ -128,36 +104,17 @@ const UserManagementDashboard: React.FC = () => {
         session.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const filteredHistory = histories?.filter((historyItem: History) =>
-        historyItem.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const sortedHistory = useSortedHistory(filteredHistory, sortBy, "asc");
-
-    const handleDateRangeChange = (range: DateRange, filterType: string) => {
-        if (filterType === "custom") {
-            setDateRange({ from: range.from, to: range.to });
-        }
-    };
-
-    // Determine if we're in a loading state
     const isLoading =
         (usersLoading && activeTab === "users") ||
-        (sessionsLoading && activeTab === "sessions") ||
-        (historiesLoading && activeTab === "record");
+        (sessionsLoading && activeTab === "sessions");
 
     return (
         <div className="min-h-screen px-6 pt-3 pb-6">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center">
                     <div>
-                        <div
-                            onClick={() => navigate("/")}
-                            className="bg-blue-100 cursor-pointer h-10 w-10 flex justify-center items-center  rounded-full"
-                        >
-                            <ChevronLeft color="gray" />
-                        </div>
                         <h1 className="text-3xl font-bold text-gray-900">
-                            User Management Dashboard
+                            User Management
                         </h1>
                         <p className="text-gray-600 mt-2">
                             Manage users, monitor active sessions, and track
@@ -167,15 +124,6 @@ const UserManagementDashboard: React.FC = () => {
                     <div className="mt-3 md:mt-0">
                         <InputDialog branchId={param.id!} />
                     </div>
-                </div>
-
-                <div className="flex flex-row items-center mb-6">
-                    <DateFilter
-                        onDateRangeChange={handleDateRangeChange}
-                        dateRange={dateRange}
-                        setDateRange={setDateRange}
-                        onSingleDate={setSingleDate}
-                    />
                 </div>
 
                 {usersLoading ? (
@@ -189,11 +137,11 @@ const UserManagementDashboard: React.FC = () => {
                     <StatCard
                         totalUsers={totalUsers}
                         totalActiveUsers={activeUsers}
-                        numberOfHistory={histories?.length || 0}
+                        // numberOfHistory={histories?.length || 0}
                     />
                 )}
 
-                <div className="bg-white rounded-xl shadow-sm mb-6 border border-gray-100">
+                <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-sm mb-6 border border-gray-100">
                     <div className="flex border-b border-gray-200">
                         <button
                             className={`py-4 px-6 font-medium text-sm ${
@@ -214,16 +162,6 @@ const UserManagementDashboard: React.FC = () => {
                             onClick={() => setActiveTab("sessions")}
                         >
                             Active Sessions
-                        </button>
-                        <button
-                            className={`py-4 px-6 font-medium text-sm ${
-                                activeTab === "record"
-                                    ? "text-blue-600 border-b-2 border-blue-600"
-                                    : "text-gray-500 hover:text-gray-700"
-                            }`}
-                            onClick={() => setActiveTab("record")}
-                        >
-                            Records
                         </button>
                     </div>
 
@@ -289,17 +227,6 @@ const UserManagementDashboard: React.FC = () => {
                                             defaultValue={sortBy}
                                             setSortBy={setSortBy}
                                         />
-                                        <div className="ml-2">
-                                            <ExportButton
-                                                disabled={historiesLoading}
-                                                data={sortedHistory}
-                                                filename={`Attendance Report for ${formatDate(
-                                                    String(dateRange.from)
-                                                )}-${formatDate(
-                                                    String(dateRange.to)
-                                                )}`}
-                                            />
-                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -307,16 +234,13 @@ const UserManagementDashboard: React.FC = () => {
 
                         {/* Error Display */}
                         {(usersError && activeTab === "users") ||
-                        (sessionsError && activeTab === "sessions") ||
-                        (historiesError && activeTab === "record") ? (
+                        (sessionsError && activeTab === "sessions") ? (
                             <ErrorDisplay
                                 message={`Failed to load ${activeTab}`}
                                 onRetry={
                                     activeTab === "users"
                                         ? refetchUsers
-                                        : activeTab === "sessions"
-                                        ? refetchSessions
-                                        : refetchHistories
+                                        : refetchSessions
                                 }
                             />
                         ) : isLoading ? (
@@ -330,26 +254,49 @@ const UserManagementDashboard: React.FC = () => {
                                     Array.from({ length: 6 }).map((_, i) => (
                                         <SessionCardSkeleton key={i} />
                                     ))}
-                                {activeTab === "record" &&
+                                {/* {activeTab === "record" &&
                                     Array.from({ length: 6 }).map((_, i) => (
                                         <HistoryCardSkeleton key={i} />
-                                    ))}
+                                    ))} */}
                             </div>
                         ) : (
                             // Content Display
                             <>
-                                {activeTab === "users" ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {activeTab === "users" && (
+                                    <div className="border rounded-lg">
+                                        <div className="grid grid-cols-12 p-4 font-medium border-b">
+                                            <div className="col-span-4">
+                                                Name
+                                            </div>
+                                            <div className="col-span-3">
+                                                Branch
+                                            </div>
+                                            <div className="col-span-3">
+                                                Joined Date
+                                            </div>
+                                            <div className="col-span-1">
+                                                Status
+                                            </div>
+                                            <div className="col-span-1"></div>
+                                        </div>
                                         {filteredUsers?.length > 0 ? (
                                             filteredUsers?.map((user: User) => (
-                                                <UserCard
+                                                <EmployeeTable
                                                     key={user.id}
                                                     user={user}
-                                                    sessions={sessions?.filter(
-                                                        (s: Session) =>
-                                                            s.userId === user.id
-                                                    )}
+                                                    // sessions={sessions?.filter(
+                                                    //     (s: Session) =>
+                                                    //         s.userId === user.id
+                                                    // )}
                                                 />
+                                                // <UserCard
+                                                //     key={user.id}
+                                                //     user={user}
+                                                //     sessions={sessions?.filter(
+                                                //         (s: Session) =>
+                                                //             s.userId === user.id
+                                                //     )}
+                                                // />
                                             ))
                                         ) : (
                                             <div className="col-span-full text-center py-12">
@@ -378,7 +325,8 @@ const UserManagementDashboard: React.FC = () => {
                                             </div>
                                         )}
                                     </div>
-                                ) : activeTab === "sessions" ? (
+                                )}
+                                {activeTab === "sessions" && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {filteredSessions?.filter(
                                             (s: Session) => s.active
@@ -416,44 +364,6 @@ const UserManagementDashboard: React.FC = () => {
                                                     {searchTerm
                                                         ? "Try adjusting your search query"
                                                         : "No users are currently active in this branch"}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {sortedHistory?.length > 0 ? (
-                                            sortedHistory?.map(
-                                                (historyItem: History) => (
-                                                    <HistoryCard
-                                                        key={historyItem.id}
-                                                        history={historyItem}
-                                                    />
-                                                )
-                                            )
-                                        ) : (
-                                            <div className="col-span-full text-center py-12">
-                                                <svg
-                                                    className="w-16 h-16 mx-auto text-gray-300"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                    />
-                                                </svg>
-                                                <h3 className="mt-4 text-lg font-medium text-gray-700">
-                                                    No record found
-                                                </h3>
-                                                <p className="mt-2 text-gray-500">
-                                                    {searchTerm
-                                                        ? "Try adjusting your search query"
-                                                        : "No record available for this branch"}
                                                 </p>
                                             </div>
                                         )}

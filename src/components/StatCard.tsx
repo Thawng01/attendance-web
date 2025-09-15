@@ -1,15 +1,15 @@
 const StatCard = ({
     totalUsers,
     totalActiveUsers,
-    numberOfHistory,
-}: {
+}: // numberOfHistory,
+{
     totalUsers: number;
     totalActiveUsers: number;
-    numberOfHistory: number;
+    // numberOfHistory: number;
 }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
+            <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
                 <div className="flex items-center">
                     <div className="p-3 rounded-lg bg-blue-100">
                         <svg
@@ -36,7 +36,7 @@ const StatCard = ({
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
+            <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
                 <div className="flex items-center">
                     <div className="p-3 rounded-lg bg-green-100">
                         <svg
@@ -63,7 +63,7 @@ const StatCard = ({
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
+            {/* <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md">
                 <div className="flex items-center">
                     <div className="p-3 rounded-lg bg-amber-100">
                         <svg
@@ -88,7 +88,7 @@ const StatCard = ({
                         <p className="text-gray-600">History Events</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

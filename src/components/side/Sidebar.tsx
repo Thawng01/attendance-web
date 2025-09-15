@@ -1,0 +1,57 @@
+import {
+    Users as UsersIcon,
+    LogOut,
+    ChevronDown,
+    ChevronRight,
+} from "lucide-react";
+import { NavLink } from "react-router";
+import { useState } from "react";
+import { navItems } from "@/constants";
+
+interface SidebarProps {
+    onClose?: () => void;
+}
+
+export default function Sidebar({ onClose }: SidebarProps) {
+    const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+    // const toggleSubmenu = (menu: string) => {
+    //     if (openSubmenu === menu) {
+    //         setOpenSubmenu(null);
+    //     } else {
+    //         setOpenSubmenu(menu);
+    //     }
+    // };
+
+    return (
+        <div className="flex flex-col h-full">
+            <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto pt-10">
+                {navItems.map((item) => (
+                    <div key={item.name}>
+                        <NavLink
+                            to={item.path}
+                            onClick={onClose}
+                            className={({ isActive }: { isActive: boolean }) =>
+                                `flex items-center px-4 py-3 text-sm font-medium rounded-md ${
+                                    isActive
+                                        ? "bg-blue-100 text-[#189af0]"
+                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                }`
+                            }
+                        >
+                            <item.icon className="flex-shrink-0 h-5 w-5 mr-3" />
+                            {item.name}
+                        </NavLink>
+                    </div>
+                ))}
+            </nav>
+
+            <div className="p-4 border-t border-gray-200">
+                <button className="flex items-center w-full px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900">
+                    <LogOut className="flex-shrink-0 h-5 w-5 mr-3" />
+                    Sign out
+                </button>
+            </div>
+        </div>
+    );
+}

@@ -13,7 +13,7 @@ const UserCard: React.FC<{ user: User; sessions: Session[] }> = ({
         now -
         new Date(activeSessions && activeSessions[0]?.startTime).getTime();
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100">
+        <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100">
             <div className="p-6">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">

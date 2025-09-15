@@ -11,7 +11,7 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
     const diff = now - new Date(session.startTime).getTime();
 
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-lg">
+        <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-lg">
             <div className="p-5">
                 <div className="flex justify-between items-start">
                     <div>

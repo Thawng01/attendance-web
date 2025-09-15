@@ -163,7 +163,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     };
 
     return (
-        <div className={`flex flex-col sm:flex-row gap-4 ${className}`}>
+        <div className={`flex flex-col sm:flex-row gap-4 ${className} `}>
             {/* Filter Type Selector */}
             <Select
                 value={selectedFilter}
@@ -171,7 +171,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                     handleFilterChange(value as DateFilterType)
                 }
             >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="bg-white/30 backdrop-blur-md">
                     <SelectValue placeholder="Select filter" />
                 </SelectTrigger>
                 <SelectContent>{getSelectOptions()}</SelectContent>
@@ -181,13 +181,13 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
-                        className="w-[280px] justify-start text-left font-normal"
+                        className="bg-white/30 backdrop-blur-md justify-start text-left font-normal"
                     >
                         <Calendar className="mr-2 h-4 w-4" />
                         {formatDateRange(dateRange)}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 " align="start">
                     <CalendarComponent
                         initialFocus
                         mode="range"

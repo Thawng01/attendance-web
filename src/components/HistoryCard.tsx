@@ -1,5 +1,5 @@
 import type { History } from "@/pages/BranchUser";
-import { formatDate, formatDateTime, formatDuration } from "@/utils";
+import { formatDateTime, formatDuration } from "@/utils";
 
 // History Card Component
 const HistoryCard: React.FC<{
@@ -10,7 +10,7 @@ const HistoryCard: React.FC<{
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-lg">
+        <div className="bg-white/30 backdrop-blur-md rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-lg">
             <div className="p-5">
                 <div className="flex justify-between items-start">
                     <div>

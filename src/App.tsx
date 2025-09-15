@@ -5,6 +5,9 @@ import BranchUser from "./pages/BranchUser";
 import WelcomePage from "./pages/Welcome";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import BranchPage from "./pages/Branch";
+import EmployeePage from "./pages/Employee";
+import Report from "./pages/Report";
 
 export const routes = createBrowserRouter([
     {
@@ -16,6 +19,30 @@ export const routes = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Home />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/branches",
+                element: (
+                    <ProtectedRoute>
+                        <BranchPage />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/employee",
+                element: (
+                    <ProtectedRoute>
+                        <EmployeePage />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "/reports",
+                element: (
+                    <ProtectedRoute>
+                        <Report />
                     </ProtectedRoute>
                 ),
             },

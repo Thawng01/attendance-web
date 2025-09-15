@@ -17,7 +17,7 @@ export default function GradientButton({
         <button
             disabled={disabled}
             onClick={onClick}
-            className={`flex items-center px-4 md:px-6 py-2 rounded-md text-white font-semibold shadow-lg transition-transform duration-200 cursor-pointer  focus:outline-none ${className}`}
+            className={`flex items-center justify-center px-4 md:px-6 py-2 rounded-md text-white font-semibold shadow-lg transition-transform duration-200 cursor-pointer  focus:outline-none ${className}`}
             style={{
                 background:
                     "linear-gradient(to right, #56c1f7, #2192ef, #189af0)",

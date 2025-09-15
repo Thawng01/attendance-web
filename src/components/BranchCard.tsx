@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import GradientButton from "./GradientButton";
-import { ChevronRight } from "lucide-react";
+import { Activity, ChevronRight, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BranchCardAction from "./BranchCardAction";
 
@@ -37,7 +37,7 @@ const BranchCard = ({
     return (
         <div
             key={branch.id}
-            className="rounded-xl shadow-md hover:shadow-lg transition-all duration-300 bg-white p-6 flex flex-col border border-gray-100 hover:border-blue-100"
+            className="rounded-xl shadow-md hover:shadow-lg transition-all duration-300 bg-white/30 backdrop-blur-md p-4 flex flex-col border border-gray-100 hover:border-blue-100"
         >
             <div className="flex items-start justify-between mb-3">
                 <div>
@@ -50,31 +50,55 @@ const BranchCard = ({
                     </p>
                 </div>
                 <div className="flex flex-row items-center">
-                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-[#189af0]">
+                    {/* <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-[#189af0]">
                         {totalUsers} users
-                    </span>
+                    </span> */}
                     <BranchCardAction branchId={branch.id} />
                 </div>
             </div>
 
             {/* Progress Bars */}
             <div className="mb-3">
-                <div className="flex justify-between text-sm text-gray-600 mb-1">
+                {/* <div className="flex justify-between text-sm text-gray-600 mb-1">
                     <span>Active: {activeUsers}</span>
                     <span>Inactive: {inactiveUsers}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                </div> */}
+                {/* <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
                         className="bg-green-500 h-2.5 rounded-full"
                         style={{
                             width: `${activePercent}%`,
                         }}
                     ></div>
+                </div> */}
+
+                <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center">
+                        <Users className="h-3 w-3 mr-1 text-muted-foreground" />
+                        <span className="bg-blue-100 text-[#189af0] py-1 px-2 rounded-xl">
+                            {totalUsers} users
+                        </span>
+                    </div>
+                    <div className="flex items-center">
+                        <Activity className="h-3 w-3 mr-1 text-green-500" />
+                        <span className="text-green-600">
+                            {activeUsers} active
+                        </span>
+                    </div>
+                </div>
+
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div
+                        className="bg-green-500 h-2 rounded-full"
+                        style={{
+                            width: `${(activeUsers / totalUsers) * 100}%`,
+                        }}
+                    />
                 </div>
             </div>
 
             {/* Recent Active Users */}
-            {recentActiveUsers.length > 0 && (
+            {/* {recentActiveUsers.length > 0 && (
                 <div className="mb-3">
                     <h3 className="text-sm font-medium text-gray-700 mb-2">
                         Recently Active
@@ -100,12 +124,16 @@ const BranchCard = ({
                         ))}
                     </div>
                 </div>
-            )}
+            )} */}
 
             {/* View Button */}
             <div className="mt-auto pt-4 border-t border-gray-100">
                 <GradientButton
-                    onClick={() => navigate(`/branches/${branch.id}`)}
+                    onClick={() =>
+                        navigate({
+                            pathname: `/branches/${branch.id}`,
+                        })
+                    }
                 >
                     View Details
                     <ChevronRight />
