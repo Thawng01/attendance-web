@@ -4,11 +4,10 @@ import type { DateRange } from "../MultiDatePicker";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSortedHistory } from "@/hooks/useSort";
 import ExportButton from "@/utils/ExportButton";
-import { formatDate } from "@/utils";
+import { formatDate, formatDateTime, formatDuration } from "@/utils";
 import type { Branch, History } from "@/pages/BranchUser";
 import { Sorting } from "../Sorting";
 import BranchFilter from "../BranchFilter";
-import HistoryCard from "../HistoryCard";
 
 const ReportComponent = ({
     dateRange,
@@ -28,12 +27,7 @@ const ReportComponent = ({
     const [sort, setSort] = useState<"desc" | "asc">("desc");
 
     const { user } = useAuth();
-    const {
-        data: histories,
-        isLoading,
-        error,
-        refetch: refetchHistories,
-    } = useFetch(
+    const { data: histories, isLoading } = useFetch(
         `/histories/branch/${user?.id}?branchId=${selectedBranch}&&date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
     );
 
@@ -117,18 +111,57 @@ const ReportComponent = ({
                 </div>
             </div>
             <p className="text-gray-600 mt-2">
+                Showing
                 <span className="text-[#189af0]">
                     {sortedHistory?.length} records
                 </span>{" "}
                 in {branches.find((b) => b.id === selectedBranch)?.name}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6"> */}
+            <div className="border rounded-lg">
+                <div className="grid grid-cols-12 p-4 font-medium border-b">
+                    <div className="col-span-3 sm:col-span-2">Date</div>
+                    <div className="col-span-3 sm:col-span-2">Name</div>
+
+                    <div className="col-span-3 hidden sm:block">Clock In</div>
+
+                    <div className="col-span-3 hidden md:block">Clock Out</div>
+
+                    <div className="col-span-2 sm:col-span-1">Duration</div>
+                    <div className="col-span-2 sm:col-span-1"></div>
+                </div>
                 {sortedHistory?.length > 0 ? (
                     sortedHistory?.map((historyItem: History) => (
-                        <HistoryCard
+                        // <HistoryCard
+                        //     key={historyItem.id}
+                        //     history={historyItem}
+                        // />
+                        <div
                             key={historyItem.id}
-                            history={historyItem}
-                        />
+                            className="grid grid-cols-12 p-2 border-b last:border-b-0 hover:bg-gray-50"
+                        >
+                            <div className="col-span-3 sm:col-span-2">
+                                {formatDate(historyItem.createdAt)}
+                            </div>
+                            <div className="col-span-3 sm:col-span-2 ">
+                                {historyItem.user.name}
+                            </div>
+
+                            <div className="col-span-3 hidden sm:block">
+                                {formatDateTime(historyItem.session.startTime)}
+                            </div>
+
+                            <div className="col-span-3 hidden md:block">
+                                {formatDateTime(historyItem.session.endTime)}
+                            </div>
+
+                            <div className="col-span-2 sm:col-span-1">
+                                {formatDuration(historyItem.session.duration)}
+                            </div>
+
+                            {/* Actions */}
+                            <div className="col-span-2 sm:col-span-1 text-right"></div>
+                        </div>
                     ))
                 ) : (
                     <div className="col-span-full text-center py-12">

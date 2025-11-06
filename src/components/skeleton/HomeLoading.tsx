@@ -8,7 +8,7 @@ export const HomeLoading = () => {
                         {[1, 2, 3].map((i) => (
                             <div
                                 key={i}
-                                className="rounded-xl shadow-md bg-white p-6 h-80"
+                                className="rounded-xl shadow-md bg-white/30 backdrop-blur-md p-6 h-80"
                             ></div>
                         ))}
                     </div>

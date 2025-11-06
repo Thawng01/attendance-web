@@ -4,6 +4,7 @@ import CreateBranch from "@/components/CreateBranch";
 import BranchCard from "@/components/BranchCard";
 import HomeLoading from "@/components/skeleton/HomeLoading";
 import { useAuth } from "@/contexts/AuthContext";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 
 type User = {
     id: string;
@@ -28,7 +29,7 @@ const BranchPage = () => {
         data: branches,
         error,
         isLoading: loading,
-    } = useFetch(`/branches/company/user/${user?.id}`);
+    } = useFetchWithAuth(`/branches/company/user/${user?.id}`);
 
     // Filter and sort branches
     const processedBranches = branches?.filter((branch: Branch) =>
@@ -226,7 +227,7 @@ const BranchPage = () => {
                         </p>
                     </div>
                 ) : processedBranches?.length === 0 ? (
-                    <div className="bg-white rounded-xl p-12 text-center shadow-md border border-gray-100">
+                    <div className="bg-white/30 backdrop-blur-md rounded-xl p-12 text-center shadow-md border border-gray-100">
                         <svg
                             className="w-16 h-16 text-gray-300 mx-auto mb-4"
                             fill="none"

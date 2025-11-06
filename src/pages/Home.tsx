@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import type { Branch } from "./BranchUser";
 import AttendanceChartFilter from "@/components/AttendanceChartFilter";
 import InitialLoading from "@/components/skeleton/InitialLoading";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 
 export interface User {
     id: string;
@@ -32,7 +33,7 @@ const Dashboard: React.FC = () => {
         data: branches,
         isLoading,
         error,
-    } = useFetch(`/branches/company/user/${user?.id}`);
+    } = useFetchWithAuth(`/branches/company/user/${user?.id}`);
 
     const totalUsers = branches?.reduce(
         (total: number, branch: Branch) => total + branch.User.length,

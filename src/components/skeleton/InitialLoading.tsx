@@ -1,8 +1,8 @@
 // components/InitialLoading.jsx
 const InitialLoading = () => {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="text-center p-8">
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
                 <div className="relative">
                     <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

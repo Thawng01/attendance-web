@@ -3,6 +3,7 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -10,7 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import usePost from "@/hooks/usePost";
+import { useAuth } from "@/contexts/AuthContext";
+
+import usePostWithAuth from "@/hooks/usePostWithAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 
@@ -20,8 +23,11 @@ export function InputDialog({ branchId }: { branchId: string }) {
         name: "",
         email: "",
     });
+
+    const { user } = useAuth();
+
     const queryClient = useQueryClient();
-    const { mutate, isPending, error } = usePost("/users", () => {
+    const { mutate, isPending, error } = usePostWithAuth("/users", () => {
         queryClient.invalidateQueries({
             queryKey: [`/users/branch/${branchId}`],
         });
@@ -57,10 +63,19 @@ export function InputDialog({ branchId }: { branchId: string }) {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     {error && (
-                        <span className="text-[red]">{error.message}</span>
+                        <span className="text-[red]">
+                            {error?.response.data}
+                        </span>
                     )}
                     <DialogHeader>
                         <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription>
+                            You can create new user up to{" "}
+                            {user?.Payment &&
+                                user?.Payment[user?.Payment?.length - 1]
+                                    ?.package.userLimit}{" "}
+                            users
+                        </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4">
                         <div className="grid gap-3">

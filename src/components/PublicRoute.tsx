@@ -5,13 +5,13 @@ import { Navigate } from "react-router-dom";
 import InitialLoading from "./skeleton/InitialLoading";
 
 const PublicRoute = ({ children }: { children: ReactNode }) => {
-    const { user, loading } = useAuth();
+    const { token, loading } = useAuth();
 
     if (loading) {
         return <InitialLoading />;
     }
 
-    return !user ? children : <Navigate to="/" replace />;
+    return !token ? children : <Navigate to="/" replace />;
 };
 
 export default PublicRoute;

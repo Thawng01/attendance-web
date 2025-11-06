@@ -20,9 +20,6 @@ type Branch = {
 
 const BranchCard = ({
     branch,
-    inactiveUsers,
-    recentActiveUsers,
-    activePercent,
     totalUsers,
     activeUsers,
 }: {

@@ -13,11 +13,9 @@ const Report = () => {
     });
     const { user } = useAuth();
 
-    const {
-        data: branches,
-        isLoading,
-        error,
-    } = useFetch(`/branches/company/user/${user?.id}`);
+    const { data: branches, isLoading } = useFetch(
+        `/branches/company/user/${user?.id}`
+    );
 
     const handleDateRangeChange = (range: DateRange, filterType: string) => {
         if (filterType === "custom") {

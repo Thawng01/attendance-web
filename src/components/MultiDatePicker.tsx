@@ -12,7 +12,7 @@ import {
     subMonths,
     subYears,
 } from "date-fns";
-import { Calendar, ChevronDown } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import {

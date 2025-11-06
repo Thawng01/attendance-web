@@ -1,14 +1,8 @@
-import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import {
-    Building2,
-    Calendar1Icon,
-    MailIcon,
-    UserCircle2Icon,
-} from "lucide-react";
+import { Building2, UserCircle2Icon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 
 const ProfilePopup = () => {
     const { user, logout } = useAuth();
@@ -29,38 +23,20 @@ const ProfilePopup = () => {
                 </PopoverTrigger>
 
                 <PopoverContent className="w-auto">
-                    <div className="flex items-center mb-3">
-                        <Building2
-                            className={`mr-2 h-5 w-5 text-[#189af0]
-                        `}
-                        />
-                        <div className="ml-2">
-                            <p className="">{user?.name}</p>
-                            <p className="text-gray-400">@{user?.username}</p>
+                    <Link to={"/company/details"}>
+                        <div className="flex items-center mb-3">
+                            <Building2
+                                className={`mr-2 h-5 w-5 text-[#189af0]
+                                `}
+                            />
+                            <div className="ml-2">
+                                <p className="">{user?.name}</p>
+                                <p className="text-gray-400 text-sm">
+                                    @{user?.username}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex items-center mb-3">
-                        <MailIcon
-                            className={`mr-2 h-5 w-5 text-[#189af0]
-                        `}
-                        />
-                        <p className="ml-2">{user?.email}</p>
-                    </div>
-                    <div className="flex items-center mb-3">
-                        <Calendar1Icon
-                            className={`mr-2 h-5 w-5 text-[#189af0]
-                        `}
-                        />
-                        <div className="ml-2">
-                            <p className="">Registered At</p>
-                            <p className="text-gray-400">
-                                {format(
-                                    new Date(user?.createdAt!),
-                                    "yyyy-MM-dd"
-                                )}
-                            </p>
-                        </div>
-                    </div>
+                    </Link>
 
                     <div className="mt-6 flex justify-center">
                         <button

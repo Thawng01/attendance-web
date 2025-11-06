@@ -16,8 +16,8 @@ export const exportHistoryToExcel = (
         Email: item.user.email || "No provided",
         Branch: item.Branch.name,
         Date: new Date(item.createdAt).toLocaleDateString(),
-        "Start Time": new Date(item.session.startTime).toLocaleTimeString(),
-        "End Time": new Date(item.session.endTime).toLocaleTimeString(),
+        "Clock In": new Date(item.session.startTime).toLocaleTimeString(),
+        "Clock Out": new Date(item.session.endTime).toLocaleTimeString(),
         Duration: formatDuration(item.session.duration), // Convert seconds to minutes
     }));
 

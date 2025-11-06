@@ -5,9 +5,9 @@ import SessionCard from "@/components/SesscionCard";
 import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
 import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
 import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
-import { Sorting } from "@/components/Sorting";
 import StatCard from "@/components/StatCard";
 import useFetch from "@/hooks/useFetch";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -71,9 +71,9 @@ const UserManagementDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<"users" | "sessions" | "record">(
         "users"
     );
-    const [sortBy, setSortBy] = useState<"date" | "startTime" | "endTime">(
-        "date"
-    );
+    // const [sortBy, setSortBy] = useState<"date" | "startTime" | "endTime">(
+    //     "date"
+    // );
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -83,14 +83,14 @@ const UserManagementDashboard: React.FC = () => {
         isLoading: usersLoading,
         error: usersError,
         refetch: refetchUsers,
-    } = useFetch(`/users/branch/${param.id}`);
+    } = useFetchWithAuth(`/users/branch/${param.id}`);
 
     const {
         data: sessions,
         isLoading: sessionsLoading,
         error: sessionsError,
         refetch: refetchSessions,
-    } = useFetch(`/sessions/branch/${param.id}`);
+    } = useFetchWithAuth(`/sessions/branch/${param.id}`);
 
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;
@@ -209,7 +209,7 @@ const UserManagementDashboard: React.FC = () => {
                                             setDate={setDate}
                                         /> */}
 
-                                        <Sorting
+                                        {/* <Sorting
                                             data={[
                                                 {
                                                     value: "date",
@@ -226,7 +226,7 @@ const UserManagementDashboard: React.FC = () => {
                                             ]}
                                             defaultValue={sortBy}
                                             setSortBy={setSortBy}
-                                        />
+                                        /> */}
                                     </div>
                                 )}
                             </div>

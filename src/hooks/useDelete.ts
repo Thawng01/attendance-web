@@ -2,11 +2,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { clientApi } from "../api/clientApi";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const useDelete = (url: string, callback?: (value: any) => void) => {
+
+    const { token } = useAuth()
     const createItem = async (data: any) => {
 
-        await clientApi.delete(`${url}/${data.id}`);
+        await clientApi.delete(`${url}/${data.id}`, {
+            headers: {
+                "x-auth-token": token
+            }
+        });
 
     };
 

@@ -1,12 +1,8 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Building2, Calendar, Users, Clock } from "lucide-react";
-import GradientButton from "@/components/GradientButton";
-import { CreateCompany } from "@/components/CreateCompany";
+import { Calendar, Users, Clock } from "lucide-react";
 
-interface WelcomePageProps {
-    onCreateCompany: () => void;
-}
+import { CreateCompany } from "@/components/CreateCompany";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const WelcomePage = () => {
     return (
@@ -33,7 +29,22 @@ const WelcomePage = () => {
                     </p>
 
                     <div className="flex justify-center">
-                        <CreateCompany label="Create Your Company" />
+                        {/* <CreateCompany label="Create Your Company" /> */}
+
+                        <Link to={"/auth/register"}>
+                            <Button
+                                className="p-4"
+                                size="lg"
+                                style={{
+                                    background:
+                                        "linear-gradient(to right, #56c1f7, #2192ef, #189af0)",
+                                }}
+                            >
+                                <p className={"text-white text-lg"}>
+                                    Create Your Company
+                                </p>
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 

@@ -9,8 +9,6 @@ import CardAction from "@/components/CardAction";
 import { formatDate } from "@/utils";
 import EmployeeFilter from "@/components/employee/EmployeeFilter";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
-import InitialLoading from "@/components/skeleton/InitialLoading";
-import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
 
 const EmployeePage = () => {
     const [userBranchFilter, setUserBranchFilter] = useState<string>("all");
@@ -20,7 +18,6 @@ const EmployeePage = () => {
     const { user } = useAuth();
     const {
         data: users,
-        isLoading: loading,
         error: userError,
         refetch: reloadUsers,
     } = useFetch(
@@ -101,8 +98,6 @@ const EmployeePage = () => {
                     </div>
                 </CardHeader>
 
-                {loading && <StatsSkeleton />}
-
                 {userError && (
                     <ErrorDisplay
                         message="Something went wrong"
@@ -112,24 +107,34 @@ const EmployeePage = () => {
                 <CardContent>
                     <div className="border rounded-lg">
                         <div className="grid grid-cols-12 p-4 font-medium border-b">
-                            <div className="col-span-3 sm:col-span-4">Name</div>
-                            <div className="col-span-3">Branch</div>
-                            <div className="col-span-3 hidden sm:flex">
+                            <div className="col-span-6 sm:col-span-4">Name</div>
+
+                            <div className="col-span-3 hidden sm:block">
+                                Branch
+                            </div>
+
+                            <div className="col-span-3 hidden md:block">
                                 Joined Date
                             </div>
-                            <div className="col-span-1">Status</div>
-                            <div className="col-span-1"></div>
+
+                            <div className="col-span-2 sm:col-span-1">
+                                Status
+                            </div>
+                            <div className="col-span-2 sm:col-span-1"></div>
                         </div>
+
+                        {/* Body */}
                         {filteredUsers?.length > 0 ? (
                             filteredUsers.map((user: User) => (
                                 <div
                                     key={user.id}
                                     className="grid grid-cols-12 p-2 border-b last:border-b-0 hover:bg-gray-50"
                                 >
-                                    <div className="col-span-4 font-medium">
+                                    <div className="col-span-6 sm:col-span-4 font-medium">
                                         {user.name}
                                     </div>
-                                    <div className="col-span-3">
+
+                                    <div className="col-span-3 hidden sm:block">
                                         {
                                             branches?.find(
                                                 (b: Branch) =>
@@ -137,10 +142,12 @@ const EmployeePage = () => {
                                             )?.name
                                         }
                                     </div>
-                                    <div className="col-span-3 hidden sm:flex">
+
+                                    <div className="col-span-3 hidden md:block">
                                         {formatDate(user.createdAt)}
                                     </div>
-                                    <div className="col-span-1">
+
+                                    <div className="col-span-2 sm:col-span-1">
                                         <span
                                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                                                 user.active
@@ -153,7 +160,9 @@ const EmployeePage = () => {
                                                 : "Inactive"}
                                         </span>
                                     </div>
-                                    <div className="col-span-1 text-right">
+
+                                    {/* Actions */}
+                                    <div className="col-span-2 sm:col-span-1 text-right">
                                         <CardAction
                                             branchId={user.branchId}
                                             userId={user.id}
