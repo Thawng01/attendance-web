@@ -8,7 +8,8 @@ const OwnerLayout = () => {
     const [openMenu, setOpenMenu] = useState(false);
 
     const { user } = useAuth();
-    if (user?.email !== "engskk@gmail.com") return <Navigate to={"/"} />;
+
+    if (user?.role !== "SUPERADMIN") return <Navigate to={"/"} />;
 
     return (
         <div

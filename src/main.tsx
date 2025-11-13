@@ -11,7 +11,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 const queryClient = new QueryClient();
 
 const initialOptions = {
-    clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
+    clientId: import.meta.env.VITE_PAYPAL_LIVE_CLIENT_ID,
 };
 createRoot(document.getElementById("root")!).render(
     <StrictMode>

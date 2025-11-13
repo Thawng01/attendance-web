@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState, type ReactNode } from "react";
 
 import type { Payment } from "type";
 
+type CompanyRole = "ADMIN" | "SUPERADMIN";
+
 type PaymentStatus =
     | "PENDING"
     | "COMPLETED"
@@ -17,6 +19,7 @@ type Company = {
     username: string;
     email: string;
     createdAt: string;
+    role: CompanyRole;
     paymentStatus: PaymentStatus;
     Payment?: Payment[];
 };

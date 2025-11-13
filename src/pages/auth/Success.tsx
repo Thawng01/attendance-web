@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building, Building2, CheckCircle, Users } from "lucide-react";
+import { Building, CheckCircle, Users } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export function PaymentSuccessPage() {

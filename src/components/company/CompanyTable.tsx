@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Company, PaymentStatus } from "type";
 import { Badge } from "../ui/badge";
-import { ChevronRight } from "lucide-react";
 
 interface CompanyTableProps {
     companies: Company[];

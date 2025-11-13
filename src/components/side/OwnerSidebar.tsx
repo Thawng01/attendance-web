@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { navItems, ownerSideItems } from "@/constants";
+import { ownerSideItems } from "@/constants";
 
 interface SidebarProps {
     onClose?: () => void;

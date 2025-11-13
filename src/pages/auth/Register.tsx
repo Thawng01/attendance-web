@@ -6,6 +6,14 @@ import usePost from "@/hooks/usePost";
 import { Building2 } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+type Token = {
+    id: string;
+    email: string;
+    role: string;
+    paymentStatus: string;
+};
 
 export function RegisterPage() {
     const [isLogin, setLogin] = useState(false);
@@ -33,10 +41,18 @@ export function RegisterPage() {
             email: "",
             password: "",
         });
+
+        const decoded: Token = jwtDecode(data);
+
+        localStorage.setItem("attendance_auth", JSON.stringify(data));
+
+        if (decoded.role === "SUPERADMIN") {
+            navigate("/admin", { replace: true });
+        } else {
+            navigate("/", { replace: true });
+        }
         setLogged(true);
         setToken(data);
-        localStorage.setItem("attendance_auth", JSON.stringify(data));
-        navigate("/", { replace: true });
     });
 
     const { mutate, isPending, error } = usePost("/company", (data) => {

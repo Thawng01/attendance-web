@@ -1,9 +1,10 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { MenuIcon } from "lucide-react";
-import OwnerProfile from "./OwnerProfile";
+import { useNavigate } from "react-router-dom";
 
 const OwnerHeader = ({ onClick }: { onClick: () => void }) => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
     return (
         <header className="w-full bg-white/50 backdrop-blur-md shadow-sm fixed top-0 left-0 h-[65px]">
             <div className="flex flex-1 flex-row justify-between items-center px-8">
@@ -22,7 +23,19 @@ const OwnerHeader = ({ onClick }: { onClick: () => void }) => {
                         </h1>
                     </div>
                 </div>
-                {user && <OwnerProfile />}
+                {user && (
+                    <div className=" flex justify-center">
+                        <button
+                            onClick={() => {
+                                logout();
+                                navigate("/welcome");
+                            }}
+                            className="bg-red-400 py-1.5 px-5 rounded-md focus:outline-none text-white font-medium"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                )}
             </div>
         </header>
     );

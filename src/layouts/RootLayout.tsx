@@ -10,9 +10,14 @@ const Layout = () => {
     const { user } = useAuth();
     useEffect(() => {
         if (user) {
-            if (user.Payment && user.Payment.length > 0) {
+            if (user.role === "SUPERADMIN") {
+                navigate("/admin", { replace: true });
+            }
+            if (user.role === "ADMIN" && user.paymentStatus === "COMPLETED") {
                 navigate("/", { replace: true });
-            } else {
+            }
+
+            if (user.role === "ADMIN" && user.paymentStatus === "PENDING") {
                 navigate("/auth/payment", { replace: true });
             }
         }

@@ -2,7 +2,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Users, Building2 } from "lucide-react";
-import useFetch from "@/hooks/useFetch";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Branch } from "./BranchUser";
 import AttendanceChartFilter from "@/components/AttendanceChartFilter";

@@ -1,6 +1,4 @@
 import { Calendar, Users, Clock } from "lucide-react";
-
-import { CreateCompany } from "@/components/CreateCompany";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -9,7 +7,10 @@ const WelcomePage = () => {
         <div className="min-h-screen">
             <header className="w-full bg-white/30 backdrop-blur-md shadow-sm fixed top-0 left-0">
                 <div className="px-6 py-4 flex items-center">
-                    <Calendar className="h-8 w-8 text-[#1891f0] mr-4" />
+                    <img
+                        src="/logo.png"
+                        className="h-12 w-12 text-[#1891f0] mr-4"
+                    />
                     <h1 className=" font-semibold text-[#189af0]">
                         Attendance
                     </h1>
@@ -106,7 +107,21 @@ const WelcomePage = () => {
                     </p>
 
                     <div className="flex justify-center">
-                        <CreateCompany label="Register Now" now={true} />
+                        <Link to={"/auth/register"}>
+                            <Button
+                                className="p-4 bg-white"
+                                size="lg"
+                                // style={{
+                                //     background:
+                                //         "linear-gradient(to right, #56c1f7, #2192ef, #189af0)",
+                                // }}
+                            >
+                                <p className={"text-[#189af0] text-lg"}>
+                                    Create Your Company
+                                </p>
+                            </Button>
+                        </Link>
+                        {/* <CreateCompany label="Register Now" now={true} /> */}
                     </div>
                 </div>
             </main>

@@ -118,7 +118,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                                             <span className="font-medium text-muted-foreground">
                                                 Limit:
                                             </span>
-                                            <p>{payment.package.limit} users</p>
+                                            <p>
+                                                {payment.package.userLimit}{" "}
+                                                users
+                                            </p>
                                         </div>
                                         <div>
                                             <span className="font-medium text-muted-foreground">

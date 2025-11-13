@@ -6,7 +6,6 @@ import { SessionCardSkeleton } from "@/components/skeleton/SessionCardSkeleton";
 import { StatsSkeleton } from "@/components/skeleton/StatsSkeleton";
 import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
 import StatCard from "@/components/StatCard";
-import useFetch from "@/hooks/useFetch";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 
 import React, { useState } from "react";

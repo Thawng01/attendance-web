@@ -12,6 +12,7 @@ const Header = ({ onClick }: { onClick: () => void }) => {
                         onClick={onClick}
                         className="text-[#189af0] md:hidden"
                     />
+
                     <div className=" flex items-center ml-3">
                         <img
                             src="/logo.png"
