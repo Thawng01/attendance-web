@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Company, PaymentStatus } from "type";
 import { Badge } from "../ui/badge";
+import { DeleteDialog } from "./DeleteDialog";
 
 interface CompanyTableProps {
     companies: Company[];
@@ -92,7 +93,6 @@ const CompanyTable: React.FC<CompanyTableProps> = ({
                 <CardTitle>Companies ({companies.length})</CardTitle>
             </CardHeader>
             <CardContent>
-                {/* Desktop Table */}
                 <div className="hidden lg:block">
                     <Table>
                         <TableHeader>
@@ -103,12 +103,7 @@ const CompanyTable: React.FC<CompanyTableProps> = ({
                                 >
                                     Company Name <SortIcon field="name" />
                                 </TableHead>
-                                {/* <TableHead
-                                    className="cursor-pointer hover:bg-accent"
-                                    onClick={() => handleSort("username")}
-                                >
-                                    Username <SortIcon field="username" />
-                                </TableHead> */}
+
                                 <TableHead
                                     className="cursor-pointer hover:bg-accent"
                                     onClick={() => handleSort("email")}
@@ -180,15 +175,9 @@ const CompanyTable: React.FC<CompanyTableProps> = ({
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex space-x-2">
-                                            {/* <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() =>
-                                                    onEditCompany?.(company)
-                                                }
-                                            >
-                                                Edit
-                                            </Button> */}
+                                            <DeleteDialog
+                                                companyId={company.id}
+                                            />
                                             <Button
                                                 className="text-white rounded-full items-center justify-center"
                                                 // variant="ghost"
@@ -283,18 +272,11 @@ const CompanyTable: React.FC<CompanyTableProps> = ({
                                     )}
                                 </div>
 
-                                <div className="flex space-x-2 pt-3 border-t">
-                                    {/* <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex-1"
-                                        onClick={() => onEditCompany?.(company)}
-                                    >
-                                        Edit
-                                    </Button> */}
+                                <div className="flex flex-col md:flex-row  border-t">
+                                    <DeleteDialog companyId={company.id} />
                                     <Button
-                                        size="sm"
-                                        className="flex-1"
+                                        size="default"
+                                        className="flex-1 mt-3 md:mt-0 rounded-full"
                                         style={{
                                             background:
                                                 "linear-gradient(to right, #56c1f7, #2192ef, #189af0)",

@@ -7,7 +7,7 @@ const OwnerHeader = ({ onClick }: { onClick: () => void }) => {
     const navigate = useNavigate();
     return (
         <header className="w-full bg-white/50 backdrop-blur-md shadow-sm fixed top-0 left-0 h-[65px]">
-            <div className="flex flex-1 flex-row justify-between items-center px-8">
+            <div className="flex flex-1 flex-row justify-between items-center px-4 md:px-8">
                 <div className="flex items-center">
                     <MenuIcon
                         onClick={onClick}

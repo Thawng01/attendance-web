@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { clientApi } from "../api/clientApi";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import type { AxiosError } from "axios";
 
 const useDelete = (url: string, callback?: (value: any) => void) => {
 
@@ -14,7 +15,6 @@ const useDelete = (url: string, callback?: (value: any) => void) => {
                 "x-auth-token": token
             }
         });
-
     };
 
     return useMutation<any, any, any>({
@@ -24,12 +24,22 @@ const useDelete = (url: string, callback?: (value: any) => void) => {
             callback && callback(data);
         },
 
-        onError: () => {
-            toast("Someting went wrong while deleting the item.", {
-                style: {
-                    color: 'red'
-                }
-            })
+        onError: (error: AxiosError) => {
+            const errorMessage = error.response?.data as string;
+            if (error.status === 401) {
+                toast(errorMessage, {
+                    style: {
+                        color: 'red'
+                    }
+                })
+            } else {
+
+                toast("Someting went wrong while deleting the item.", {
+                    style: {
+                        color: 'red'
+                    }
+                })
+            }
         }
     });
 };
