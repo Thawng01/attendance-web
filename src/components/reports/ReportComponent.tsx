@@ -155,7 +155,7 @@ const ReportComponent = ({
                                 {formatDateTime(historyItem.session.endTime)}
                             </div>
 
-                            <div className="col-span-2 sm:col-span-1">
+                            <div className="col-span-2 sm:col-span-1 text-sm">
                                 {formatDuration(historyItem.session.duration)}
                             </div>
 
