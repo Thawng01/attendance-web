@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Payment } from "type";
+import type { Company, Payment } from "type";
 import PaymentModal from "@/components/company/PaymentModel";
 import CompanyTable from "@/components/company/CompanyTable";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import { TriangleAlert } from "lucide-react";
+import { isAxiosError } from "axios";
 
 const CompaniesPage: React.FC = () => {
     // const [companies, setCompanies] = useState<Company[]>([]);
@@ -15,11 +16,11 @@ const CompaniesPage: React.FC = () => {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     const {
-        data: companies,
+        data: companies = [],
         isLoading,
         error,
         refetch,
-    } = useFetchWithAuth("/company/info");
+    } = useFetchWithAuth<Company[]>("/company/info");
 
     const handleViewPayments = (payments: Payment[]) => {
         setSelectedPayments(payments);
@@ -59,13 +60,24 @@ const CompaniesPage: React.FC = () => {
     }
 
     // Helper function for consistent error message extraction
-    function getErrorMessage(error: any): string {
-        return (
-            error?.response?.data?.message ||
-            error?.response?.data ||
-            error?.message ||
-            "Please try again later"
-        );
+    function getErrorMessage(error: unknown): string {
+        if (isAxiosError(error)) {
+            const responseData = error.response?.data;
+
+            if (typeof responseData === "string") return responseData;
+            if (
+                responseData &&
+                typeof responseData === "object" &&
+                "message" in responseData &&
+                typeof responseData.message === "string"
+            ) {
+                return responseData.message;
+            }
+        }
+
+        return error instanceof Error
+            ? error.message
+            : "Please try again later";
     }
 
     return (

@@ -78,18 +78,18 @@ const UserManagementDashboard: React.FC = () => {
 
     const param = useParams();
     const {
-        data: users,
+        data: users = [],
         isLoading: usersLoading,
         error: usersError,
         refetch: refetchUsers,
-    } = useFetchWithAuth(`/users/branch/${param.id}`);
+    } = useFetchWithAuth<User[]>(`/users/branch/${param.id}`);
 
     const {
-        data: sessions,
+        data: sessions = [],
         isLoading: sessionsLoading,
         error: sessionsError,
         refetch: refetchSessions,
-    } = useFetchWithAuth(`/sessions/branch/${param.id}`);
+    } = useFetchWithAuth<Session[]>(`/sessions/branch/${param.id}`);
 
     const totalUsers = users?.length || 0;
     const activeUsers = users?.filter((u: User) => u.active).length || 0;

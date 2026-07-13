@@ -1,4 +1,4 @@
-import useFetch from "@/hooks/useFetch";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import { useState } from "react";
 import AttendanceChart from "./AttendanceChart";
 import type { Branch } from "@/pages/BranchUser";
@@ -13,8 +13,11 @@ const AttendanceChartFilter = ({
     const [selectedBranch, setSelectedBranch] = useState<string>(
         branches[0]?.id
     );
-    const { data: weeklySessions } = useFetch(
-        `/sessions/weekly/${companyId}?branchId=${selectedBranch}`
+    const { data: weeklySessions = [] } = useFetchWithAuth<
+        { name: string; total: number }[]
+    >(
+        `/sessions/weekly/${companyId}?branchId=${selectedBranch}`,
+        Boolean(companyId && selectedBranch)
     );
 
     const branchName = branches.find((b) => b.id === selectedBranch)?.name;

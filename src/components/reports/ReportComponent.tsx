@@ -1,4 +1,4 @@
-import useFetch from "@/hooks/useFetch";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import { useState } from "react";
 import type { DateRange } from "../MultiDatePicker";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,6 +8,22 @@ import { formatDate, formatDateTime, formatDuration } from "@/utils";
 import type { Branch, History } from "@/pages/BranchUser";
 import { Sorting } from "../Sorting";
 import BranchFilter from "../BranchFilter";
+
+const HISTORY_PAGE_SIZE = 20;
+
+interface PaginationMeta {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
+interface PaginatedHistoryResponse {
+    data: History[];
+    pagination: PaginationMeta;
+}
 
 const ReportComponent = ({
     dateRange,
@@ -27,9 +43,40 @@ const ReportComponent = ({
     const [sort, setSort] = useState<"desc" | "asc">("desc");
 
     const { user } = useAuth();
-    const { data: histories, isLoading } = useFetch(
-        `/histories/branch/${user?.id}?branchId=${selectedBranch}&&date=${dateRange.from}&&startDate=${dateRange.from}&&endDate=${dateRange.to}&&singleDate=${isSingleDate}`
-    );
+    const filterKey = `${selectedBranch ?? ""}:${dateRange.from.toISOString()}:${dateRange.to.toISOString()}:${isSingleDate}`;
+    const [paginationState, setPaginationState] = useState({
+        filterKey,
+        page: 1,
+    });
+    const page =
+        paginationState.filterKey === filterKey ? paginationState.page : 1;
+
+    const historyUrl = `/histories/branch/${user?.id}?branchId=${encodeURIComponent(
+        selectedBranch ?? ""
+    )}&date=${encodeURIComponent(
+        dateRange.from.toISOString()
+    )}&startDate=${encodeURIComponent(
+        dateRange.from.toISOString()
+    )}&endDate=${encodeURIComponent(
+        dateRange.to.toISOString()
+    )}&singleDate=${isSingleDate}&page=${page}&limit=${HISTORY_PAGE_SIZE}`;
+
+    const { data: historyResponse, isLoading } =
+        useFetchWithAuth<PaginatedHistoryResponse>(
+            historyUrl,
+            Boolean(user?.id && selectedBranch)
+        );
+
+    const histories = historyResponse?.data ?? [];
+    const pagination = historyResponse?.pagination;
+
+    const changePage = (nextPage: number) =>
+        setPaginationState(
+            {
+                filterKey,
+                page: nextPage,
+            }
+        );
 
     const filteredHistory = histories?.filter((historyItem: History) =>
         historyItem.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -111,9 +158,9 @@ const ReportComponent = ({
                 </div>
             </div>
             <p className="text-gray-600 mt-2">
-                Showing
+                Showing{" "}
                 <span className="text-[#189af0]">
-                    {sortedHistory?.length} records
+                    {sortedHistory?.length} of {pagination?.total ?? 0} records
                 </span>{" "}
                 in {branches.find((b) => b.id === selectedBranch)?.name}
             </p>
@@ -190,6 +237,29 @@ const ReportComponent = ({
                     </div>
                 )}
             </div>
+            {pagination && pagination.totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-between gap-4">
+                    <button
+                        type="button"
+                        className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
+                        onClick={() => changePage(page - 1)}
+                        disabled={!pagination.hasPreviousPage || isLoading}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-sm font-medium text-gray-600">
+                        Page {pagination.page} of {pagination.totalPages}
+                    </span>
+                    <button
+                        type="button"
+                        className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
+                        onClick={() => changePage(page + 1)}
+                        disabled={!pagination.hasNextPage || isLoading}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

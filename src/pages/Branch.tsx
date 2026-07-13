@@ -25,10 +25,13 @@ const BranchPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     // const [sortBy, setSortBy] = useState<"name" | "users" | "date">("name");
     const {
-        data: branches,
+        data: branches = [],
         error,
         isLoading: loading,
-    } = useFetchWithAuth(`/branches/company/user/${user?.id}`);
+    } = useFetchWithAuth<Branch[]>(
+        `/branches/company/user/${user?.id}`,
+        Boolean(user?.id)
+    );
 
     // Filter and sort branches
     const processedBranches = branches?.filter((branch: Branch) =>

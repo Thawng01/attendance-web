@@ -1,7 +1,8 @@
 import { DateFilter, type DateRange } from "@/components/MultiDatePicker";
 import ReportComponent from "@/components/reports/ReportComponent";
 import { useAuth } from "@/contexts/AuthContext";
-import useFetch from "@/hooks/useFetch";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+import type { Branch } from "./BranchUser";
 import React, { useState } from "react";
 
 const Report = () => {
@@ -13,8 +14,9 @@ const Report = () => {
     });
     const { user } = useAuth();
 
-    const { data: branches, isLoading } = useFetch(
-        `/branches/company/user/${user?.id}`
+    const { data: branches = [], isLoading } = useFetchWithAuth<Branch[]>(
+        `/branches/company/user/${user?.id}`,
+        Boolean(user?.id)
     );
 
     const handleDateRangeChange = (range: DateRange, filterType: string) => {

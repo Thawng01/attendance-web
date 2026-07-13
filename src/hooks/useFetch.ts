@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { clientApi } from "../api/clientApi";
 
-const useFetch = (url: string) => {
+const useFetch = <T = any>(url: string, enabled = true) => {
     const fetchItem = async () => {
         const res = await clientApi.get(url, {
         });
@@ -10,10 +10,11 @@ const useFetch = (url: string) => {
     };
 
     return (
-        useQuery<any, any, any>(
+        useQuery<T, any, T>(
             {
                 queryKey: [url],
                 queryFn: fetchItem,
+                enabled,
             })
     );
 };

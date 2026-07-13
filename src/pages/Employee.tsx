@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import type { Branch, User } from "./BranchUser";
 import { useAuth } from "@/contexts/AuthContext";
-import useFetch from "@/hooks/useFetch";
+import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 import BranchFilter from "@/components/BranchFilter";
 import CardAction from "@/components/CardAction";
 import { formatDate } from "@/utils";
@@ -16,17 +16,19 @@ const EmployeePage = () => {
     const [status, setStatus] = useState("all");
 
     const { user } = useAuth();
+    const userEndpointId =
+        userBranchFilter === "all" ? user?.id : userBranchFilter;
     const {
-        data: users,
+        data: users = [],
         error: userError,
         refetch: reloadUsers,
-    } = useFetch(
-        `/users/company/${
-            userBranchFilter === "all" ? user?.id : userBranchFilter
-        }?all=${userBranchFilter}`
+    } = useFetchWithAuth<User[]>(
+        `/users/company/${userEndpointId}?all=${userBranchFilter}`,
+        Boolean(userEndpointId)
     );
-    const { data: branches, isLoading } = useFetch(
-        `/branches/company/${user?.id}`
+    const { data: branches = [], isLoading } = useFetchWithAuth<Branch[]>(
+        `/branches/company/${user?.id}`,
+        Boolean(user?.id)
     );
 
     let filteredUsers = users?.filter((user: User) =>

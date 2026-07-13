@@ -29,10 +29,13 @@ export interface AttendanceRecord {
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const {
-        data: branches,
+        data: branches = [],
         isLoading,
         error,
-    } = useFetchWithAuth(`/branches/company/user/${user?.id}`);
+    } = useFetchWithAuth<Branch[]>(
+        `/branches/company/user/${user?.id}`,
+        Boolean(user?.id)
+    );
 
     const totalUsers = branches?.reduce(
         (total: number, branch: Branch) => total + branch.User.length,
@@ -93,9 +96,9 @@ const Dashboard: React.FC = () => {
                     </div> */}
 
                     <div className="lg:col-span-3">
-                        {branches?.length > 0 && (
+                        {branches?.length > 0 && user?.id && (
                             <AttendanceChartFilter
-                                companyId={user?.id!}
+                                companyId={user.id}
                                 branches={branches}
                             />
                         )}
