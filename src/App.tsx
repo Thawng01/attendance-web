@@ -1,22 +1,40 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Layout from "./layouts/RootLayout";
-import BranchUser from "./pages/BranchUser";
-import WelcomePage from "./pages/Welcome";
+import { lazy } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import BranchPage from "./pages/Branch";
-import EmployeePage from "./pages/Employee";
-import Report from "./pages/Report";
-import { RegisterPage } from "./pages/auth/Register";
-import PublicLayout from "./layouts/PublicLayout";
-import { PaymentSuccessPage } from "./pages/auth/Success";
-import OwnerHome from "./pages/owner/OwnerHome";
-import OwnerLayout from "./layouts/OwnerLayout";
-import CompanyDetailPage from "./pages/CompanyDetail";
-import OwnerPackagesPage from "./pages/owner/OwnerPackagePage";
-import { PackagePage } from "./pages/PackagePage";
-import { PaymentPage } from "./pages/auth/PaymentPage";
+
+const Layout = lazy(() => import("./layouts/RootLayout"));
+const PublicLayout = lazy(() => import("./layouts/PublicLayout"));
+const OwnerLayout = lazy(() => import("./layouts/OwnerLayout"));
+const Home = lazy(() => import("./pages/Home"));
+const BranchUser = lazy(() => import("./pages/BranchUser"));
+const WelcomePage = lazy(() => import("./pages/Welcome"));
+const BranchPage = lazy(() => import("./pages/Branch"));
+const EmployeePage = lazy(() => import("./pages/Employee"));
+const Report = lazy(() => import("./pages/Report"));
+const OwnerHome = lazy(() => import("./pages/owner/OwnerHome"));
+const CompanyDetailPage = lazy(() => import("./pages/CompanyDetail"));
+const OwnerPackagesPage = lazy(() => import("./pages/owner/OwnerPackagePage"));
+const RegisterPage = lazy(() =>
+    import("./pages/auth/Register").then((module) => ({
+        default: module.RegisterPage,
+    }))
+);
+const PaymentSuccessPage = lazy(() =>
+    import("./pages/auth/Success").then((module) => ({
+        default: module.PaymentSuccessPage,
+    }))
+);
+const PackagePage = lazy(() =>
+    import("./pages/PackagePage").then((module) => ({
+        default: module.PackagePage,
+    }))
+);
+const PaymentPage = lazy(() =>
+    import("./pages/auth/PaymentPage").then((module) => ({
+        default: module.PaymentPage,
+    }))
+);
 
 export const routes = createBrowserRouter([
     {

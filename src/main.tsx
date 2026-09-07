@@ -1,13 +1,13 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { routes } from "./App.tsx";
 import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import AuthContextProvider from "./contexts/AuthContext.tsx";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import AuthContextProvider from "./contexts/AuthContextProvider.tsx";
 import type { AxiosError } from "axios";
+import InitialLoading from "./components/skeleton/InitialLoading.tsx";
 
 const NON_RETRYABLE_STATUS_CODES = new Set([
     400, 401, 403, 404, 409, 422, 429,
@@ -16,6 +16,7 @@ const NON_RETRYABLE_STATUS_CODES = new Set([
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
+            staleTime: 30_000,
             retry: (failureCount, error) => {
                 const status = (error as AxiosError).response?.status;
 
@@ -29,18 +30,15 @@ const queryClient = new QueryClient({
     },
 });
 
-const initialOptions = {
-    clientId: import.meta.env.VITE_PAYPAL_LIVE_CLIENT_ID,
-};
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <PayPalScriptProvider options={initialOptions}>
-            <AuthContextProvider>
-                <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+            <QueryClientProvider client={queryClient}>
+                <Suspense fallback={<InitialLoading />}>
                     <RouterProvider router={routes} />
-                    <Toaster />
-                </QueryClientProvider>
-            </AuthContextProvider>
-        </PayPalScriptProvider>
+                </Suspense>
+                <Toaster />
+            </QueryClientProvider>
+        </AuthContextProvider>
     </StrictMode>
 );

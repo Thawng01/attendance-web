@@ -9,6 +9,9 @@ const WelcomePage = () => {
                 <div className="px-6 py-4 flex items-center">
                     <img
                         src="/logo.png"
+                        alt="Attendance"
+                        width={48}
+                        height={48}
                         className="h-12 w-12 text-[#1891f0] mr-4"
                     />
                     <h1 className=" font-semibold text-[#189af0]">

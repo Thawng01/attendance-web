@@ -44,9 +44,6 @@ export const exportHistoryToExcel = (
 };
 
 // utils/exportToExcel.ts
-// @ts-ignore - xlsx-style types might not be available
-// import * as XLSXStyle from "xlsx-style";
-// import { saveAs } from "file-saver";
 // import type { History } from "@/pages/BranchUser";
 // import { formatDuration } from "../utils/index";
 

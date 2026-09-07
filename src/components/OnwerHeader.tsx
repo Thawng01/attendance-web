@@ -16,6 +16,9 @@ const OwnerHeader = ({ onClick }: { onClick: () => void }) => {
                     <div className=" flex items-center ml-3">
                         <img
                             src="/logo.png"
+                            alt="Attendance"
+                            width={56}
+                            height={56}
                             className="h-12 w-12 md:h-14 md:w-14 md:mr-2"
                         />
                         <h1 className=" font-semibold text-[#189af0]">

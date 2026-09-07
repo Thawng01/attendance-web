@@ -1,6 +1,5 @@
 // components/ExportButton.tsx
 import React from "react";
-import { exportHistoryToExcel } from "../utils/exportToExcel";
 import type { History } from "@/pages/BranchUser";
 import GradientButton from "@/components/GradientButton";
 
@@ -16,13 +15,16 @@ const ExportButton: React.FC<ExportButtonProps> = ({
     filename = "Attendance_Report.xlsx",
     disabled = false,
 }) => {
-    const handleExport = () => {
+    const handleExport = async () => {
         if (data.length === 0) {
             alert("No data to export");
             return;
         }
 
         try {
+            const { exportHistoryToExcel } = await import(
+                "../utils/exportToExcel"
+            );
             exportHistoryToExcel(data, filename);
         } catch (error) {
             console.error("Export failed:", error);

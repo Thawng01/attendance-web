@@ -8,6 +8,11 @@ import { clientApi } from "@/api/clientApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Package } from "type";
+import PayPalPageProvider from "@/components/PayPalPageProvider";
+
+type PayPalApprovalData = {
+    orderID: string;
+};
 
 export function PaymentPage() {
     const [selectedPackage, setSelectedPackage] = useState<
@@ -26,36 +31,28 @@ export function PaymentPage() {
 
     // FIXED: This should return a Promise that resolves to order ID
     const createOrder = async (): Promise<string> => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await clientApi.post(
-                    "/payments",
-                    {
-                        price: selectedPackage?.price,
-                        packageId: selectedPackage?.id,
-                    },
-                    {
-                        headers: {
-                            "x-auth-token": token,
-                        },
-                    }
-                );
-
-                const orderData = await response.data;
-
-                setPaymentId(orderData.paymentId);
-
-                // Resolve with the PayPal order ID
-                resolve(orderData.id);
-            } catch (error) {
-                // console.error("Error creating order:", error);
-                reject(error);
+        const response = await clientApi.post(
+            "/payments",
+            {
+                price: selectedPackage?.price,
+                packageId: selectedPackage?.id,
+            },
+            {
+                headers: {
+                    "x-auth-token": token,
+                },
             }
-        });
+        );
+
+        const orderData = response.data;
+
+        setPaymentId(orderData.paymentId);
+
+        return orderData.id;
     };
 
     // FIXED: Proper onApprove implementation
-    const onApprove = async (data: any) => {
+    const onApprove = async (data: PayPalApprovalData) => {
         // console.log("Payment approved:", data);
         try {
             const response = await clientApi.post(
@@ -80,7 +77,7 @@ export function PaymentPage() {
                     package: selectedPackage,
                 },
             });
-        } catch (error) {
+        } catch {
             // console.error("Error capturing payment:", error);
             alert("Payment failed. Please try again.");
         }
@@ -97,8 +94,9 @@ export function PaymentPage() {
     // };
 
     return (
-        <div className="min-h-screen sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
+        <PayPalPageProvider>
+            <div className="min-h-screen sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -247,7 +245,8 @@ export function PaymentPage() {
                         </CardContent>
                     </Card>
                 )}
+                </div>
             </div>
-        </div>
+        </PayPalPageProvider>
     );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import type { Branch, User } from "./BranchUser";
@@ -31,19 +31,26 @@ const EmployeePage = () => {
         Boolean(user?.id)
     );
 
-    let filteredUsers = users?.filter((user: User) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = useMemo(() => {
+        const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
-    filteredUsers = users?.filter((user: User) => {
-        if (status === "inactive") {
-            return user.active === false;
-        } else if (status === "active") {
-            return user.active === true;
-        } else {
-            return user;
-        }
-    });
+        return users.filter((employee: User) => {
+            const matchesName = employee.name
+                .toLowerCase()
+                .includes(normalizedSearchTerm);
+            const matchesStatus =
+                status === "all" ||
+                (status === "active" && employee.active) ||
+                (status === "inactive" && !employee.active);
+
+            return matchesName && matchesStatus;
+        });
+    }, [searchTerm, status, users]);
+
+    const branchNames = useMemo(
+        () => new Map(branches.map((branch) => [branch.id, branch.name])),
+        [branches]
+    );
 
     return (
         <div className="p-6">
@@ -137,12 +144,7 @@ const EmployeePage = () => {
                                     </div>
 
                                     <div className="col-span-3 hidden sm:block">
-                                        {
-                                            branches?.find(
-                                                (b: Branch) =>
-                                                    b.id === user.branchId
-                                            )?.name
-                                        }
+                                        {branchNames.get(user.branchId)}
                                     </div>
 
                                     <div className="col-span-3 hidden md:block">
@@ -182,11 +184,7 @@ const EmployeePage = () => {
                         Showing {filteredUsers?.length} of {users?.length}{" "}
                         employees
                         {userBranchFilter !== "all" &&
-                            ` in ${
-                                branches?.find(
-                                    (b: Branch) => b.id === userBranchFilter
-                                )?.name
-                            }`}
+                            ` in ${branchNames.get(userBranchFilter)}`}
                     </div>
                 </CardContent>
             </Card>

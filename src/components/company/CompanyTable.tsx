@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
     Table,
     TableBody,
@@ -37,26 +37,22 @@ const CompanyTable: React.FC<CompanyTableProps> = ({
         }
     };
 
-    const sortedCompanies = [...companies].sort((a, b) => {
-        const aValue = a[sortField];
-        const bValue = b[sortField];
+    const sortedCompanies = useMemo(
+        () =>
+            [...companies].sort((a, b) => {
+                const aValue = a[sortField];
+                const bValue = b[sortField];
 
-        if (typeof aValue === "string" && typeof bValue === "string") {
-            return sortDirection === "asc"
-                ? aValue.localeCompare(bValue)
-                : bValue.localeCompare(aValue);
-        }
+                if (typeof aValue === "string" && typeof bValue === "string") {
+                    return sortDirection === "asc"
+                        ? aValue.localeCompare(bValue)
+                        : bValue.localeCompare(aValue);
+                }
 
-        if (typeof aValue === "string" && typeof bValue === "string") {
-            const aDate = new Date(aValue);
-            const bDate = new Date(bValue);
-            return sortDirection === "asc"
-                ? aDate.getTime() - bDate.getTime()
-                : bDate.getTime() - aDate.getTime();
-        }
-
-        return 0;
-    });
+                return 0;
+            }),
+        [companies, sortDirection, sortField]
+    );
 
     const getPaymentStatusVariant = (status: PaymentStatus) => {
         switch (status) {

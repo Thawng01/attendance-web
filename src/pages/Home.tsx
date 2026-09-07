@@ -1,12 +1,15 @@
-import React from "react";
+import React, { lazy, Suspense, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Users, Building2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { Branch } from "./BranchUser";
-import AttendanceChartFilter from "@/components/AttendanceChartFilter";
 import InitialLoading from "@/components/skeleton/InitialLoading";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
+
+const AttendanceChartFilter = lazy(
+    () => import("@/components/AttendanceChartFilter")
+);
 
 export interface User {
     id: string;
@@ -37,9 +40,14 @@ const Dashboard: React.FC = () => {
         Boolean(user?.id)
     );
 
-    const totalUsers = branches?.reduce(
-        (total: number, branch: Branch) => total + branch.User.length,
-        0
+    const totalUsers = useMemo(
+        () =>
+            branches.reduce(
+                (total: number, branch: Branch) =>
+                    total + branch.User.length,
+                0
+            ),
+        [branches]
     );
 
     const totalBranches = branches?.length || 0;
@@ -97,10 +105,16 @@ const Dashboard: React.FC = () => {
 
                     <div className="lg:col-span-3">
                         {branches?.length > 0 && user?.id && (
-                            <AttendanceChartFilter
-                                companyId={user.id}
-                                branches={branches}
-                            />
+                            <Suspense
+                                fallback={
+                                    <div className="h-96 animate-pulse rounded-xl bg-white/30" />
+                                }
+                            >
+                                <AttendanceChartFilter
+                                    companyId={user.id}
+                                    branches={branches}
+                                />
+                            </Suspense>
                         )}
                     </div>
                 </div>

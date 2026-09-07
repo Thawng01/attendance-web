@@ -3,6 +3,7 @@ import GradientButton from "./GradientButton";
 import { Activity, ChevronRight, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BranchCardAction from "./BranchCardAction";
+import { memo } from "react";
 
 type User = {
     id: string;
@@ -24,9 +25,6 @@ const BranchCard = ({
     activeUsers,
 }: {
     branch: Branch;
-    recentActiveUsers: User[];
-    inactiveUsers: number;
-    activePercent: number;
     totalUsers: number;
     activeUsers: number;
 }) => {
@@ -140,4 +138,4 @@ const BranchCard = ({
     );
 };
 
-export default BranchCard;
+export default memo(BranchCard);

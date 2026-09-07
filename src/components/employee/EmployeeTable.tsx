@@ -1,6 +1,7 @@
 import type { User } from "@/pages/BranchUser";
 import { formatDate } from "@/utils";
 import CardAction from "../CardAction";
+import { memo } from "react";
 
 const EmployeeTable = ({ user }: { user: User }) => {
     return (
@@ -29,4 +30,4 @@ const EmployeeTable = ({ user }: { user: User }) => {
     );
 };
 
-export default EmployeeTable;
+export default memo(EmployeeTable);

@@ -8,7 +8,7 @@ import { UserCardSkeleton } from "@/components/skeleton/UserCardSkeleton";
 import StatCard from "@/components/StatCard";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export interface User {
@@ -89,18 +89,40 @@ const UserManagementDashboard: React.FC = () => {
         isLoading: sessionsLoading,
         error: sessionsError,
         refetch: refetchSessions,
-    } = useFetchWithAuth<Session[]>(`/sessions/branch/${param.id}`);
-
-    const totalUsers = users?.length || 0;
-    const activeUsers = users?.filter((u: User) => u.active).length || 0;
-
-    // Apply search filter
-    const filteredUsers = users?.filter((user: User) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    } = useFetchWithAuth<Session[]>(
+        `/sessions/branch/${param.id}`,
+        activeTab === "sessions" && Boolean(param.id)
     );
 
-    const filteredSessions = sessions?.filter((session: Session) =>
-        session.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const totalUsers = users?.length || 0;
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    const { activeUsers, filteredUsers } = useMemo(() => {
+        let activeUserCount = 0;
+        const matchingUsers: User[] = [];
+
+        users.forEach((user) => {
+            if (user.active) activeUserCount += 1;
+            if (user.name.toLowerCase().includes(normalizedSearchTerm)) {
+                matchingUsers.push(user);
+            }
+        });
+
+        return {
+            activeUsers: activeUserCount,
+            filteredUsers: matchingUsers,
+        };
+    }, [normalizedSearchTerm, users]);
+
+    const activeSessions = useMemo(
+        () =>
+            sessions.filter(
+                (session) =>
+                    session.active &&
+                    (session.user?.name ?? "")
+                        .toLowerCase()
+                        .includes(normalizedSearchTerm)
+            ),
+        [normalizedSearchTerm, sessions]
     );
 
     const isLoading =
@@ -327,19 +349,15 @@ const UserManagementDashboard: React.FC = () => {
                                 )}
                                 {activeTab === "sessions" && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {filteredSessions?.filter(
-                                            (s: Session) => s.active
-                                        ).length > 0 ? (
-                                            filteredSessions
-                                                ?.filter(
-                                                    (s: Session) => s.active
-                                                )
-                                                .map((session: Session) => (
+                                        {activeSessions.length > 0 ? (
+                                            activeSessions.map(
+                                                (session: Session) => (
                                                     <SessionCard
                                                         key={session.id}
                                                         session={session}
                                                     />
-                                                ))
+                                                )
+                                            )
                                         ) : (
                                             <div className="col-span-full text-center py-12">
                                                 <svg

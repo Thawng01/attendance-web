@@ -1,5 +1,6 @@
 import type { Session } from "@/pages/BranchUser";
 import { formatDateTime, formatDuration } from "@/utils";
+import { memo } from "react";
 
 // Session Card Component
 const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
@@ -63,4 +64,4 @@ const SessionCard: React.FC<{ session: Session }> = ({ session }) => {
     );
 };
 
-export default SessionCard;
+export default memo(SessionCard);

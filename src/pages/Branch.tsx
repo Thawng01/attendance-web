@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CreateBranch from "@/components/CreateBranch";
 import BranchCard from "@/components/BranchCard";
 import HomeLoading from "@/components/skeleton/HomeLoading";
@@ -34,9 +34,12 @@ const BranchPage = () => {
     );
 
     // Filter and sort branches
-    const processedBranches = branches?.filter((branch: Branch) =>
-        branch.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const processedBranches = useMemo(() => {
+        const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+        return branches.filter((branch: Branch) =>
+            branch.name.toLowerCase().includes(normalizedSearchTerm)
+        );
+    }, [branches, searchTerm]);
     // ?.sort((a: Branch, b: Branch) => {
     //     if (sortBy === "name") return a.name.localeCompare(b.name);
     //     if (sortBy === "users") return b.User.length - a.User.length;
@@ -48,9 +51,13 @@ const BranchPage = () => {
 
     // Stats for the header
     const totalBranches = branches?.length || 0;
-    const totalUsers = branches?.reduce(
-        (acc: number, branch: Branch) => acc + branch.User.length,
-        0
+    const totalUsers = useMemo(
+        () =>
+            branches.reduce(
+                (acc: number, branch: Branch) => acc + branch.User.length,
+                0
+            ),
+        [branches]
     );
     // const activeUsers = branches?.reduce(
     //     (acc: number, branch: Branch) =>
@@ -263,29 +270,11 @@ const BranchPage = () => {
                             const activeUsers = branch.User.filter(
                                 (u) => u.active
                             ).length;
-                            const inactiveUsers = totalUsers - activeUsers;
-
-                            const activePercent =
-                                (activeUsers / (totalUsers || 1)) * 100;
-
-                            // Get recent active users (last 5)
-                            const recentActiveUsers = branch.User.filter(
-                                (u) => u.active
-                            )
-                                .sort(
-                                    (a, b) =>
-                                        new Date(b.lastActive || 0).getTime() -
-                                        new Date(a.lastActive || 0).getTime()
-                                )
-                                .slice(0, 5);
 
                             return (
                                 <BranchCard
                                     key={branch.id}
                                     branch={branch}
-                                    recentActiveUsers={recentActiveUsers}
-                                    activePercent={activePercent}
-                                    inactiveUsers={inactiveUsers}
                                     totalUsers={totalUsers}
                                     activeUsers={activeUsers}
                                 />
