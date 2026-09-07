@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { Company } from "../../../type";
+import type { Company } from "@/contexts/AuthContext";
 
 const CompanyDetails = ({ company }: { company: Company }) => {
     const [isEditing, setIsEditing] = useState(false);

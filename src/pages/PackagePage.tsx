@@ -7,7 +7,7 @@ import useFetch from "@/hooks/useFetch";
 import { clientApi } from "@/api/clientApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Package } from "type";
+import type { Package } from "@/types";
 import PayPalPageProvider from "@/components/PayPalPageProvider";
 
 type PayPalApprovalData = {

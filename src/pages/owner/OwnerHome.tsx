@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Company, Payment } from "type";
+import type { Company, Payment } from "@/types";
 import PaymentModal from "@/components/company/PaymentModel";
 import CompanyTable from "@/components/company/CompanyTable";
 import useFetchWithAuth from "@/hooks/useFetchWithAuth";

@@ -1,7 +1,7 @@
 // components/PackageForm.tsx
 import React from "react";
 
-import type { Package, PackageFormData } from "type";
+import type { Package, PackageFormData } from "@/types";
 import {
     Dialog,
     DialogContent,

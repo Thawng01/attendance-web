@@ -1,14 +1,16 @@
-// types/user.ts
 export interface Company {
-    id: string
-    name: string
-    username: string
-    email: string
-    createdAt: string
-    description: string
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    createdAt: string;
+    description?: string;
+    role: CompanyRole;
     paymentStatus: PaymentStatus;
     Payment: Payment[];
 }
+
+export type CompanyRole = "ADMIN" | "SUPERADMIN";
 
 export interface User {
     id: string;
@@ -39,21 +41,21 @@ export interface UserStats {
 }
 
 export type PaymentStatus =
-    | 'PENDING'
-    | 'COMPLETED'
-    | 'FAILED'
-    | 'REFUNDED'
-
+    | "PENDING"
+    | "COMPLETED"
+    | "FAILED"
+    | "CANCELLED"
+    | "REFUNDED";
 
 export interface Package {
     id: string;
     name: string;
     duration: number;
     userLimit: number;
-    branchLimit: number
+    branchLimit: number;
     price: number;
     description: string;
-    createdAt: Date
+    createdAt: Date;
 }
 
 export interface Payment {

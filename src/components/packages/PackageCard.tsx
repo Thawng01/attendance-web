@@ -10,7 +10,7 @@ import {
 } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import type { Package } from "type";
+import type { Package } from "@/types";
 
 interface PackageCardProps {
     pkg: Package;

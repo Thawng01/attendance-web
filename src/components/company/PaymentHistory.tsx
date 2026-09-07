@@ -1,12 +1,12 @@
 import React from "react";
-// import { type PaymentStatus, type Payment } from "../../../type";
+import type { Payment, PaymentStatus } from "@/types";
 
 interface PaymentHistoryProps {
-    payments: any[];
+    payments: Payment[];
 }
 
 const PaymentHistory: React.FC<PaymentHistoryProps> = ({ payments }) => {
-    const getStatusColor = (status: any) => {
+    const getStatusColor = (status: PaymentStatus) => {
         switch (status) {
             case "COMPLETED":
                 return "bg-green-100 text-green-600";

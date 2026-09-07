@@ -1,23 +1,25 @@
 import { useState } from "react";
 import PaymentHistory from "./PaymentHistory";
 import CompanyDetails from "./CompanyDetails";
-import type { PaymentStatus } from "../../../type";
+import type { PaymentStatus } from "@/types";
+import type { Company } from "@/contexts/AuthContext";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
-const CompanyInfo = ({ company }: { company: any }) => {
+const CompanyInfo = ({ company }: { company: Company }) => {
     const [activeTab, setActiveTab] = useState<"details" | "payments">(
         "details"
     );
 
     const now = new Date().getTime();
-    const paymentDate = new Date(
-        company.Payment[company.Payment.length - 1].package.createdAt
-    );
+    const latestPayment = company.Payment?.[company.Payment.length - 1];
+    const paymentDate = latestPayment
+        ? new Date(latestPayment.package.createdAt)
+        : undefined;
 
-    const joinedAt = paymentDate.getTime();
-    const expiredDate = new Date(paymentDate);
-    expiredDate.setFullYear(expiredDate.getFullYear() + 1).toString();
+    const joinedAt = paymentDate?.getTime() ?? 0;
+    const expiredDate = paymentDate ? new Date(paymentDate) : undefined;
+    expiredDate?.setFullYear(expiredDate.getFullYear() + 1);
     const navigate = useNavigate();
 
     const getPaymentStatusColor = (status: PaymentStatus) => {
@@ -69,10 +71,12 @@ const CompanyInfo = ({ company }: { company: any }) => {
                                     >
                                         {company?.paymentStatus}
                                     </span>
-                                    <p className="text-sm text-gray-500 mt-2">
-                                        Expire at{" "}
-                                        {expiredDate.toLocaleDateString()}
-                                    </p>
+                                    {expiredDate && (
+                                        <p className="text-sm text-gray-500 mt-2">
+                                            Expire at{" "}
+                                            {expiredDate.toLocaleDateString()}
+                                        </p>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -101,9 +105,9 @@ const CompanyInfo = ({ company }: { company: any }) => {
                                 }`}
                             >
                                 Payment History
-                                {company?.Payment.length > 0 && (
+                                {(company.Payment?.length ?? 0) > 0 && (
                                     <span className="ml-2 bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
-                                        {company?.Payment.length}
+                                        {company.Payment?.length}
                                     </span>
                                 )}
                             </button>
@@ -116,7 +120,7 @@ const CompanyInfo = ({ company }: { company: any }) => {
                             <CompanyDetails company={company} />
                         )}
                         {activeTab === "payments" && (
-                            <PaymentHistory payments={company.Payment} />
+                            <PaymentHistory payments={company.Payment ?? []} />
                         )}
                     </div>
                 </div>

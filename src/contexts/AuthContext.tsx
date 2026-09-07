@@ -4,26 +4,9 @@ import {
     type Dispatch,
     type SetStateAction,
 } from "react";
-import type { Payment } from "type";
+import type { Company as CompanyData, Payment } from "@/types";
 
-type CompanyRole = "ADMIN" | "SUPERADMIN";
-
-type PaymentStatus =
-    | "PENDING"
-    | "COMPLETED"
-    | "FAILED"
-    | "CANCELLED"
-    | "REFUNDED";
-
-export type Company = {
-    id: string;
-    name: string;
-    description?: string;
-    username: string;
-    email: string;
-    createdAt: string;
-    role: CompanyRole;
-    paymentStatus: PaymentStatus;
+export type Company = Omit<CompanyData, "Payment"> & {
     Payment?: Payment[];
 };
 

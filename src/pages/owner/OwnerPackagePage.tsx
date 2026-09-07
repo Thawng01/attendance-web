@@ -16,7 +16,7 @@ import usePostWithAuth from "@/hooks/usePostWithAuth";
 import useUpdateWithAuth from "@/hooks/useUpdateWithAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import type { Package, PackageFormData } from "type";
+import type { Package, PackageFormData } from "@/types";
 
 const OwnerPackagesPage: React.FC = () => {
     const [formOpen, setFormOpen] = useState(false);

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Payment, PaymentStatus } from "type";
+import type { Payment, PaymentStatus } from "@/types";
 
 interface PaymentModalProps {
     payments: Payment[];
